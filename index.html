@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sino-Euro Connect - Your Bridge to the European Market</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Inter Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Custom Styles -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        /* Custom class for smooth scroll behavior */
+        html {
+            scroll-behavior: smooth;
+        }
+        /* Style for the header on scroll */
+        .header-scrolled {
+            background-color: white !important;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            padding-top: 1rem;
+            padding-bottom: 1rem;
+        }
+    </style>
+</head>
+<body class="bg-white text-gray-800">
+
+    <!-- Header -->
+    <header id="main-header" class="bg-white/80 backdrop-blur-md fixed top-0 left-0 right-0 z-50 transition-all duration-300 py-4">
+        <nav class="max-w-7xl mx-auto px-6 lg:px-8 flex justify-between items-center">
+            <!-- Logo -->
+            <a href="#" class="flex items-center space-x-2">
+                <!-- Placeholder SVG Logo -->
+                <svg class="h-8 w-8 text-gray-900" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2.5C14.0416 2.5 16.0021 3.23742 17.5103 4.54341C19.0185 5.8494 20.0001 7.63351 20.0001 9.5C20.0001 11.3665 19.0185 13.1506 17.5103 14.4566C16.0021 15.7626 14.0416 16.5 12 16.5C9.95837 16.5 7.99792 15.7626 6.48973 14.4566C4.98154 13.1506 4 11.3665 4 9.5C4 7.63351 4.98154 5.8494 6.48973 4.54341C7.99792 3.23742 9.95837 2.5 12 2.5V2.5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M4 9.5L12 21.5L20 9.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span class="font-bold text-2xl text-gray-900">Sino-Euro Connect</span>
+            </a>
+            
+            <!-- Desktop Navigation -->
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="#services" class="text-gray-600 hover:text-black transition-colors">Services</a>
+                <a href="#why-us" class="text-gray-600 hover:text-black transition-colors">Why Us</a>
+                <a href="#about" class="text-gray-600 hover:text-black transition-colors">About</a>
+                <a href="#contact" class="text-gray-600 hover:text-black transition-colors">Contact</a>
+            </div>
+            
+            <!-- CTA Button -->
+            <div class="hidden md:block">
+                <a href="#contact" class="bg-black text-white px-5 py-2.5 rounded-full font-semibold hover:bg-gray-800 transition-colors shadow-sm">
+                    Get Consultation
+                </a>
+            </div>
+            
+            <!-- Mobile Menu Button -->
+            <div class="md:hidden">
+                <button id="menu-btn" class="text-gray-800 focus:outline-none">
+                    <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                    </svg>
+                </button>
+            </div>
+        </nav>
+        
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white shadow-lg absolute top-full left-0 right-0">
+            <a href="#services" class="block px-6 py-3 text-gray-600 hover:bg-gray-50">Services</a>
+            <a href="#why-us" class="block px-6 py-3 text-gray-600 hover:bg-gray-50">Why Us</a>
+            <a href="#about" class="block px-6 py-3 text-gray-600 hover:bg-gray-50">About</a>
+            <a href="#contact" class="block px-6 py-3 text-gray-600 hover:bg-gray-50">Contact</a>
+            <div class="p-6">
+                <a href="#contact" class="w-full text-center bg-black text-white px-5 py-2.5 rounded-full font-semibold hover:bg-gray-800 transition-colors">
+                    Get Consultation
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+
+        <!-- Hero Section -->
+        <section class="relative pt-32 pb-20 md:pt-48 md:pb-32 bg-gradient-to-br from-gray-100 to-white">
+            <div class="max-w-7xl mx-auto px-6 lg:px-8 text-center">
+                <h1 class="text-4xl md:text-6xl font-bold text-gray-900 leading-tight">
+                    Unlock Your European Market Potential
+                </h1>
+                <p class="mt-6 text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
+                    We help innovative Chinese companies build a powerful, authentic digital presence for European audiences—from precision-localized websites to impactful LinkedIn strategies.
+                </p>
+                <div class="mt-10 flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
+                    <a href="#contact" class="bg-black text-white px-8 py-3 rounded-full text-lg font-semibold hover:bg-gray-800 transition-colors shadow-lg">
+                        Schedule Consultation
+                    </a>
+                    <a href="#services" class="bg-white text-black px-8 py-3 rounded-full text-lg font-semibold border-2 border-gray-300 hover:bg-gray-100 transition-colors shadow-lg">
+                        Explore Services
+                    </a>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Services Section -->
+        <section id="services" class="py-20 md:py-28 bg-white">
+            <div class="max-w-7xl mx-auto px-6 lg:px-8">
+                <div class="text-center">
+                    <h2 class="text-base font-semibold text-gray-700 tracking-wide uppercase">Our Services</h2>
+                    <p class="mt-2 text-3xl md:text-4xl font-bold text-gray-900">
+                        Bridge the Gap to Europe
+                    </p>
+                    <p class="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
+                        We provide end-to-end digital solutions to establish your brand's credibility and voice in the complex European market.
+                    </p>
+                </div>
+                
+                <div class="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                    <!-- Service 1: Website Localization -->
+                    <div class="bg-gray-50 p-8 rounded-2xl shadow-sm transition-all hover:shadow-lg">
+                        <div class="inline-flex items-center justify-center h-12 w-12 rounded-full bg-gray-200 text-black mb-6">
+                            <!-- Globe Icon -->
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-900">European Website Localization</h3>
+                        <p class="mt-4 text-gray-600">
+                            Go beyond simple translation. We adapt your website's content, UX, and design to meet the cultural expectations and legal standards (like GDPR) of your target European customers.
+                        </p>
+                    </div>
+                    
+                    <!-- Service 2: B2B LinkedIn Strategy -->
+                    <div class="bg-gray-50 p-8 rounded-2xl shadow-sm transition-all hover:shadow-lg">
+                        <div class="inline-flex items-center justify-center h-12 w-12 rounded-full bg-gray-200 text-black mb-6">
+                            <!-- LinkedIn Icon -->
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-900">B2B LinkedIn Strategy</h3>
+                        <p class="mt-4 text-gray-600">
+                            LinkedIn is the EU's premier B2B platform. We build your company page, craft executive profiles, and develop content strategies that connect you with European partners, clients, and talent.
+                        </p>
+                    </div>
+                    
+                    <!-- Service 3: Cross-Cultural Branding -->
+                    <div class="bg-gray-50 p-8 rounded-2xl shadow-sm transition-all hover:shadow-lg">
+                        <div class="inline-flex items-center justify-center h-12 w-12 rounded-full bg-gray-200 text-black mb-6">
+                            <!-- Briefcase Icon -->
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-900">Cross-Cultural Digital Branding</h3>
+                        <p class="mt-4 text-gray-600">
+                            Ensure your brand's message is not just understood, but respected. We help you find an authentic voice that balances your company's core identity with European market sensitivities.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Why Us Section -->
+        <section id="why-us" class="py-20 md:py-28 bg-white">
+            <div class="max-w-7xl mx-auto px-6 lg:px-8">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+                    <!-- Image Placeholder -->
+                    <div>
+                        <img 
+                            src="https://placehold.co/600x450/e2e8f0/64748b?text=Local+Expertise" 
+                            alt="Team of experts collaborating" 
+                            class="rounded-2xl shadow-xl w-full"
+                        >
+                    </div>
+                    
+                    <!-- Text Content -->
+                    <div class="lg:pr-10">
+                        <h2 class="text-base font-semibold text-gray-700 tracking-wide uppercase">Why Choose Us</h2>
+                        <p class="mt-2 text-3xl md:text-4xl font-bold text-gray-900">
+                            Local Experts, Global Vision
+                        </p>
+                        <p class="mt-6 text-lg text-gray-600">
+                            We aren't just translators. We are a boutique team of marketing and localization specialists based in Europe, with deep roots in and understanding of Chinese business culture. We bridge the gap language barriers can't.
+                        </p>
+                        <ul class="mt-8 space-y-4">
+                            <li class="flex items-start">
+                                <div class="flex-shrink-0">
+                                    <svg class="h-6 w-6 text-gray-900" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                </div>
+                                <p class="ml-3 text-gray-600">
+                                    <strong>Bicultural Fluency:</strong> Native understanding of both Chinese and European business etiquette.
+                                </p>
+                            </li>
+                            <li class="flex items-start">
+                                <div class="flex-shrink-0">
+                                    <svg class="h-6 w-6 text-gray-900" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                </div>
+                                <p class="ml-3 text-gray-600">
+                                    <strong>Local Market Insiders:</strong> Based in key European hubs, we know the local digital landscape, trends, and legal needs.
+                                </p>
+                            </li>
+                            <li class="flex items-start">
+                                <div class="flex-shrink-0">
+                                    <svg class="h-6 w-6 text-gray-900" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                </div>
+                                <p class="ml-3 text-gray-600">
+                                    <strong>Results-Driven:</strong> We focus on measurable outcomes: generating qualified B2B leads and building brand equity.
+                                </p>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonial Section -->
+        <section id="about" class="py-20 md:py-28 bg-gray-100">
+            <div class="max-w-3xl mx-auto px-6 lg:px-8 text-center">
+                <svg class="h-12 w-12 text-gray-400 mx-auto" fill="currentColor" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path d="M10 9C8.34315 9 7 7.65685 7 6C7 4.34315 8.34315 3 10 3C11.6569 3 13 4.34315 13 6C13 7.65685 11.6569 9 10 9ZM22 9C20.3431 9 19 7.65685 19 6C19 4.34315 20.3431 3 22 3C23.6569 3 25 4.34315 25 6C25 7.65685 23.6569 9 22 9ZM10 11C6.13401 11 3 14.134 3 18V28H7V18C7 16.3431 8.34315 15 10 15C11.6569 15 13 16.3431 13 18V28H17V18C17 14.134 13.866 11 10 11ZM22 11C18.134 11 15 14.134 15 18V28H19V18C19 16.3431 20.3431 15 22 15C23.6569 15 25 16.3431 25 18V28H29V18C29 14.134 25.866 11 22 11Z"/></svg>
+                <p class="mt-6 text-2xl md:text-3xl font-medium text-gray-900">
+                    "Sino-Euro Connect was the partner we needed. They didn't just translate our site—they helped us find our voice for the German B2B market and launched our entire LinkedIn presence. We saw qualified leads within the first quarter."
+                </p>
+                <div class="mt-8">
+                    <p class="font-semibold text-lg text-gray-900">Li Zhang</p>
+                    <p class="text-gray-600">Head of International Growth, [Tech Company]</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section id="contact" class="py-20 md:py-32 bg-white">
+            <div class="max-w-7xl mx-auto px-6 lg:px-8 text-center">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900">
+                    Ready to build your European presence?
+                </h2>
+                <p class="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
+                    Let's discuss your goals. Schedule a free, no-obligation consultation with our experts to map out your digital strategy for Europe.
+                </p>
+                <div class="mt-10">
+                    <a href="mailto:consult@sino-euro-connect.com" class="bg-black text-white px-8 py-3 rounded-full text-lg font-semibold hover:bg-gray-800 transition-colors shadow-lg">
+                        Schedule Your Free Consultation
+                    </a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+    
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-gray-400">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8 py-16">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                <!-- Logo and Mission -->
+                <div class="col-span-2 lg:col-span-2">
+                    <a href="#" class="flex items-center space-x-2">
+                        <svg class="h-8 w-8 text-white" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 2.5C14.0416 2.5 16.0021 3.23742 17.5103 4.54341C19.0185 5.8494 20.0001 7.63351 20.0001 9.5C20.0001 11.3665 19.0185 13.1506 17.5103 14.4566C16.0021 15.7626 14.0416 16.5 12 16.5C9.95837 16.5 7.99792 15.7626 6.48973 14.4566C4.98154 13.1506 4 11.3665 4 9.5C4 7.63351 4.98154 5.8494 6.48973 4.54341C7.99792 3.23742 9.95837 2.5 12 2.5V2.5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M4 9.5L12 21.5L20 9.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span class="font-bold text-2xl text-white">Sino-Euro Connect</span>
+                    </a>
+                    <p class="mt-4 text-gray-400 max-w-xs">
+                        Your strategic partner for digital expansion from China to Europe.
+                    </p>
+                </div>
+                
+                <!-- Services Links -->
+                <div>
+                    <h3 class="text-sm font-semibold text-gray-200 tracking-wider uppercase">Services</h3>
+                    <ul class="mt-4 space-y-3">
+                        <li><a href="#services" class="hover:text-white transition-colors">Website Localization</a></li>
+                        <li><a href="#services" class="hover:text-white transition-colors">LinkedIn Strategy</a></li>
+                        <li><a href="#services" class="hover:text-white transition-colors">Digital Branding</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Company Links -->
+                <div>
+                    <h3 class="text-sm font-semibold text-gray-200 tracking-wider uppercase">Company</h3>
+                    <ul class="mt-4 space-y-3">
+                        <li><a href="#about" class="hover:text-white transition-colors">About Us</a></li>
+                        <li><a href="#why-us" class="hover:text-white transition-colors">Why Us</a></li>
+                        <li><a href="#contact" class="hover:text-white transition-colors">Contact</a></li>
+                    </ul>
+                </div>
+
+                <!-- Legal Links -->
+                <div>
+                    <h3 class="text-sm font-semibold text-gray-200 tracking-wider uppercase">Legal</h3>
+                    <ul class="mt-4 space-y-3">
+                        <li><a href="#" class="hover:text-white transition-colors">Privacy Policy</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Imprint</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Bottom Bar -->
+            <div class="mt-16 border-t border-gray-700 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-sm">
+                    &copy; 2025 Sino-Euro Connect. All rights reserved.
+                </p>
+                <div class="flex space-x-6 mt-4 md:mt-0">
+                    <!-- LinkedIn Icon -->
+                    <a href="#" class="text-gray-400 hover:text-white">
+                        <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                        <span class="sr-only">LinkedIn</span>
+                    </a>
+                    <!-- WeChat (placeholder) -->
+                    <a href="#" class="text-gray-400 hover:text-white">
+                        <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 0c-6.627 0-12 4.975-12 11.111c0 3.497 1.72 6.614 4.386 8.597c-.201 1.041-.638 3.223-.74 3.613c-.087.329.083.56.39.56c.23 0 .524-.092.748-.202c.224-.11.51-.27.818-.465c.307-.195 2.193-1.39 3.328-2.146c1.08.313 2.213.485 3.37.485c6.627 0 12-4.975 12-11.111c0-6.136-5.373-11.111-12-11.111m5.344 14.161c-.131.001-.261.022-.387.062c-.31.099-.636.175-.972.23c-.482.078-1.026.118-1.597.118c-.461 0-.912-.023-1.349-.07c-.438-.047-.86-.126-1.261-.239c-.161-.045-.325-.08-.49-.104c-.394-.057-.841-.03-1.258.118c-.482.175-.856.44-1.121.792c-.22.29-.413.616-.575.968c-.131.29-.201.616-.211.957c-.01.38.072.716.244 1.006c.161.29.413.522.759.715c.346.194.759.32 1.229.39c.394.057.807.084 1.229.084c.646 0 1.272-.084 1.868-.24c.482-.127.912-.301 1.292-.513c.38-.212.674-.465.885-.756c.211-.29.337-.606.377-.946c.041-.341.021-.687-.062-1.013c-.083-.327-.234-.616-.457-.869c-.224-.253-.529-.458-.903-.617c-.328-.138-.68-.22-.989-.253c-.309-.031-.598.01-.869.117c-.25.108-.49.263-.72.465c-.09.074-.15.176-.15.285c0 .12.06.222.15.29c.3.24.66.42 1.08.54c.42.12.87.18 1.35.18c.45 0 .88-.05 1.28-.15c.4-.1.76-.25 1.08-.45c.18-.11.33-.25.45-.41c.12-.16.2-.34.23-.54c.03-.2-.01-.4-.08-.58c-.07-.18-.19-.33-.34-.45c-.15-.12-.32-.2-.51-.25c-.19-.05-.39-.07-.59-.06c-.2.01-.4.05-.59.13c-.19.08-.37.19-.53.33c-.03.02-.06.03-.1.03c-.04 0-.07-.01-.1-.03c-.03-.02-.05-.05-.05-.09c0-.04.02-.07.05-.09c.2-.16.42-.29.66-.39c.24-.1.49-.17.75-.2c.26-.03.52-.03.77.01c.25.04.49.11.72.21c.23.1.44.23.63.4c.19.17.34.38.46.61c.12.23.18.49.18.77m-5.464-5.32c.313 0 .616-.117.849-.35c.234-.234.35-.537.35-.85c0-.312-.116-.615-.35-.849c-.233-.234-.536-.35-.849-.35c-.312 0-.615.116-.849.35c-.234.234-.35.537-.35.849c0 .313.116.616.35.85c.234.233.537.35.849.35m-4.526 0c.313 0 .616-.117.85-.35c.233-.234.35-.537.35-.85c0-.312-.117-.615-.35-.849c-.234-.234-.537-.35-.85-.35c-.312 0-.615.116-.849.35c-.234.234-.35.537-.35.849c0 .313.116.616.35.85c.234.233.537.35.849.35"/></svg>
+                        <span class="sr-only">WeChat</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        // JavaScript for mobile menu toggle
+        const menuBtn = document.getElementById('menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        menuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+        
+        // Close mobile menu when a link is clicked
+        document.querySelectorAll('#mobile-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+
+        // JavaScript for header scroll effect
+        const header = document.getElementById('main-header');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 20) {
+                header.classList.add('header-scrolled');
+                header.classList.remove('bg-white/80', 'py-4');
+                header.classList.add('bg-white', 'py-4', 'shadow-lg');
+            } else {
+                header.classList.remove('header-scrolled', 'shadow-lg');
+                header.classList.add('bg-white/80', 'py-4');
+                header.classList.remove('bg-white', 'py-4');
+            }
+        });
+    </script>
+
+</body>
+</html>
