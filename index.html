@@ -20,7 +20,7 @@
                     },
                     fontFamily: {
                         display: ['Syne', 'sans-serif'],
-                        body: ['Space Grotesk', 'sans-serif'],
+                        body: ['Space Grotesk', 'Noto Sans SC', 'sans-serif'],
                     },
                 },
             },
@@ -30,7 +30,7 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&family=Syne:wght@700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- GSAP -->
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.12/dist/gsap.min.js"></script>
@@ -49,7 +49,7 @@
         html { scroll-behavior: smooth; }
 
         body {
-            font-family: 'Space Grotesk', sans-serif;
+            font-family: 'Space Grotesk', 'Noto Sans SC', sans-serif;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
             background: var(--color-void);
@@ -155,6 +155,12 @@
             fill: rgba(200,255,0,0.1);
             stroke-width: 2.5;
         }
+
+        /* Language toggle */
+        .lang-btn { transition: color 0.3s, text-shadow 0.3s; cursor: pointer; }
+        .lang-btn.active { color: var(--color-accent); }
+        .lang-btn:not(.active) { color: var(--color-text-secondary); }
+        .lang-btn:not(.active):hover { color: var(--color-text-primary); text-shadow: 0 0 8px rgba(200,255,0,0.3); }
     </style>
 </head>
 <body class="bg-void text-[#f0ede8] font-body overflow-hidden">
@@ -192,14 +198,19 @@
                 </a>
 
                 <div class="hidden md:flex items-center space-x-8">
-                    <a href="#services" class="text-dim hover:text-[#f0ede8] transition-colors">Services</a>
-                    <a href="#why-us" class="text-dim hover:text-[#f0ede8] transition-colors">Why Us</a>
-                    <a href="#about" class="text-dim hover:text-[#f0ede8] transition-colors">About</a>
-                    <a href="#contact" class="text-dim hover:text-[#f0ede8] transition-colors">Contact</a>
+                    <a href="#services" class="text-dim hover:text-[#f0ede8] transition-colors" data-i18n="nav.services">Services</a>
+                    <a href="#why-us" class="text-dim hover:text-[#f0ede8] transition-colors" data-i18n="nav.whyUs">Why Us</a>
+                    <a href="#about" class="text-dim hover:text-[#f0ede8] transition-colors" data-i18n="nav.about">About</a>
+                    <a href="#contact" class="text-dim hover:text-[#f0ede8] transition-colors" data-i18n="nav.contact">Contact</a>
                 </div>
 
-                <div class="hidden md:block">
-                    <a href="#contact" class="btn-accent px-5 py-2.5 rounded-full font-semibold">Get Consultation</a>
+                <div class="hidden md:flex items-center space-x-4">
+                    <div class="flex items-center space-x-1 text-sm">
+                        <button onclick="setLang('en')" class="lang-btn" data-lang="en">EN</button>
+                        <span class="text-dim">/</span>
+                        <button onclick="setLang('zh')" class="lang-btn" data-lang="zh">中文</button>
+                    </div>
+                    <a href="#contact" class="btn-accent px-5 py-2.5 rounded-full font-semibold" data-i18n="nav.cta">Get Consultation</a>
                 </div>
 
                 <div class="md:hidden">
@@ -212,12 +223,17 @@
             </nav>
 
             <div id="mobile-menu" class="hidden md:hidden bg-surface border-t border-border absolute top-full left-0 right-0">
-                <a href="#services" class="block px-6 py-3 text-dim hover:text-[#f0ede8] hover:bg-void/50">Services</a>
-                <a href="#why-us" class="block px-6 py-3 text-dim hover:text-[#f0ede8] hover:bg-void/50">Why Us</a>
-                <a href="#about" class="block px-6 py-3 text-dim hover:text-[#f0ede8] hover:bg-void/50">About</a>
-                <a href="#contact" class="block px-6 py-3 text-dim hover:text-[#f0ede8] hover:bg-void/50">Contact</a>
+                <div class="flex items-center justify-center space-x-2 px-6 py-3 border-b border-border">
+                    <button onclick="setLang('en')" class="lang-btn text-sm" data-lang="en">EN</button>
+                    <span class="text-dim text-sm">/</span>
+                    <button onclick="setLang('zh')" class="lang-btn text-sm" data-lang="zh">中文</button>
+                </div>
+                <a href="#services" class="block px-6 py-3 text-dim hover:text-[#f0ede8] hover:bg-void/50" data-i18n="nav.services">Services</a>
+                <a href="#why-us" class="block px-6 py-3 text-dim hover:text-[#f0ede8] hover:bg-void/50" data-i18n="nav.whyUs">Why Us</a>
+                <a href="#about" class="block px-6 py-3 text-dim hover:text-[#f0ede8] hover:bg-void/50" data-i18n="nav.about">About</a>
+                <a href="#contact" class="block px-6 py-3 text-dim hover:text-[#f0ede8] hover:bg-void/50" data-i18n="nav.contact">Contact</a>
                 <div class="p-6">
-                    <a href="#contact" class="block w-full text-center btn-accent px-5 py-2.5 rounded-full font-semibold">Get Consultation</a>
+                    <a href="#contact" class="block w-full text-center btn-accent px-5 py-2.5 rounded-full font-semibold" data-i18n="nav.cta">Get Consultation</a>
                 </div>
             </div>
         </header>
@@ -244,15 +260,15 @@
                                 stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
                     </div>
-                    <h1 class="font-display text-5xl md:text-7xl font-extrabold leading-[1.1] tracking-tight reveal-up">
+                    <h1 class="font-display text-5xl md:text-7xl font-extrabold leading-[1.1] tracking-tight reveal-up" data-i18n-html="hero.title">
                         Unlock Your European<br>Market Potential
                     </h1>
-                    <p class="mt-6 text-lg md:text-xl text-dim max-w-3xl mx-auto reveal-up">
+                    <p class="mt-6 text-lg md:text-xl text-dim max-w-3xl mx-auto reveal-up" data-i18n="hero.subtitle">
                         We help innovative Chinese companies build a powerful, authentic digital presence for European audiences—from precision-localized websites to impactful LinkedIn strategies.
                     </p>
                     <div class="mt-10 flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4 reveal-up">
-                        <a href="#contact" class="btn-accent px-8 py-3.5 rounded-full text-lg font-semibold">Schedule Consultation</a>
-                        <a href="#services" class="btn-outline px-8 py-3.5 rounded-full text-lg font-semibold">Explore Services</a>
+                        <a href="#contact" class="btn-accent px-8 py-3.5 rounded-full text-lg font-semibold" data-i18n="hero.ctaPrimary">Schedule Consultation</a>
+                        <a href="#services" class="btn-outline px-8 py-3.5 rounded-full text-lg font-semibold" data-i18n="hero.ctaSecondary">Explore Services</a>
                     </div>
                 </div>
             </section>
@@ -261,9 +277,9 @@
             <section id="services" class="py-20 md:py-28 bg-surface">
                 <div class="max-w-7xl mx-auto px-6 lg:px-8">
                     <div class="text-center">
-                        <h2 class="text-sm font-semibold text-accent tracking-[0.2em] uppercase reveal-up">Our Services</h2>
-                        <p class="mt-3 text-3xl md:text-5xl font-display font-bold reveal-up">Bridge the Gap to Europe</p>
-                        <p class="mt-5 text-lg text-dim max-w-2xl mx-auto reveal-up">
+                        <h2 class="text-sm font-semibold text-accent tracking-[0.2em] uppercase reveal-up" data-i18n="services.eyebrow">Our Services</h2>
+                        <p class="mt-3 text-3xl md:text-5xl font-display font-bold reveal-up" data-i18n="services.title">Bridge the Gap to Europe</p>
+                        <p class="mt-5 text-lg text-dim max-w-2xl mx-auto reveal-up" data-i18n="services.subtitle">
                             We provide end-to-end digital solutions to establish your brand's credibility and voice in the complex European market.
                         </p>
                     </div>
@@ -274,8 +290,8 @@
                             <div class="inline-flex items-center justify-center h-12 w-12 rounded-xl bg-accent/10 text-accent mb-6">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
                             </div>
-                            <h3 class="text-xl font-display font-bold">European Website Localization</h3>
-                            <p class="mt-4 text-dim leading-relaxed">
+                            <h3 class="text-xl font-display font-bold" data-i18n="services.card1Title">European Website Localization</h3>
+                            <p class="mt-4 text-dim leading-relaxed" data-i18n="services.card1Desc">
                                 Go beyond simple translation. We adapt your website's content, UX, and design to meet the cultural expectations and legal standards (like GDPR) of your target European customers.
                             </p>
                         </div>
@@ -284,8 +300,8 @@
                             <div class="inline-flex items-center justify-center h-12 w-12 rounded-xl bg-accent/10 text-accent mb-6">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
                             </div>
-                            <h3 class="text-xl font-display font-bold">B2B LinkedIn Strategy</h3>
-                            <p class="mt-4 text-dim leading-relaxed">
+                            <h3 class="text-xl font-display font-bold" data-i18n="services.card2Title">B2B LinkedIn Strategy</h3>
+                            <p class="mt-4 text-dim leading-relaxed" data-i18n="services.card2Desc">
                                 LinkedIn is the EU's premier B2B platform. We build your company page, craft executive profiles, and develop content strategies that connect you with European partners, clients, and talent.
                             </p>
                         </div>
@@ -294,8 +310,8 @@
                             <div class="inline-flex items-center justify-center h-12 w-12 rounded-xl bg-accent/10 text-accent mb-6">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
                             </div>
-                            <h3 class="text-xl font-display font-bold">Cross-Cultural Digital Branding</h3>
-                            <p class="mt-4 text-dim leading-relaxed">
+                            <h3 class="text-xl font-display font-bold" data-i18n="services.card3Title">Cross-Cultural Digital Branding</h3>
+                            <p class="mt-4 text-dim leading-relaxed" data-i18n="services.card3Desc">
                                 Ensure your brand's message is not just understood, but respected. We help you find an authentic voice that balances your company's core identity with European market sensitivities.
                             </p>
                         </div>
@@ -316,9 +332,9 @@
                                 alt="Team of experts collaborating" class="w-full rounded-2xl">
                         </div>
                         <div class="lg:pr-10">
-                            <h2 class="text-sm font-semibold text-accent tracking-[0.2em] uppercase reveal-up">Why Choose Us</h2>
-                            <p class="mt-3 text-3xl md:text-5xl font-display font-bold reveal-up">Local Experts,<br>Global Vision</p>
-                            <p class="mt-6 text-lg text-dim reveal-up">
+                            <h2 class="text-sm font-semibold text-accent tracking-[0.2em] uppercase reveal-up" data-i18n="whyUs.eyebrow">Why Choose Us</h2>
+                            <p class="mt-3 text-3xl md:text-5xl font-display font-bold reveal-up" data-i18n-html="whyUs.title">Local Experts,<br>Global Vision</p>
+                            <p class="mt-6 text-lg text-dim reveal-up" data-i18n="whyUs.desc">
                                 We aren't just translators. We are a boutique team of marketing and localization specialists based in Europe, with deep roots in and understanding of Chinese business culture.
                             </p>
                             <ul class="mt-8 space-y-5">
@@ -326,19 +342,19 @@
                                     <div class="flex-shrink-0 mt-1">
                                         <svg class="h-5 w-5 text-accent" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
                                     </div>
-                                    <p class="ml-4 text-dim"><strong class="text-[#f0ede8]">Bicultural Fluency:</strong> Native understanding of both Chinese and European business etiquette.</p>
+                                    <p class="ml-4 text-dim" data-i18n-html="whyUs.item1"><strong class="text-[#f0ede8]">Bicultural Fluency:</strong> Native understanding of both Chinese and European business etiquette.</p>
                                 </li>
                                 <li class="flex items-start reveal-left">
                                     <div class="flex-shrink-0 mt-1">
                                         <svg class="h-5 w-5 text-accent" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
                                     </div>
-                                    <p class="ml-4 text-dim"><strong class="text-[#f0ede8]">Local Market Insiders:</strong> Based in key European hubs, we know the local digital landscape, trends, and legal needs.</p>
+                                    <p class="ml-4 text-dim" data-i18n-html="whyUs.item2"><strong class="text-[#f0ede8]">Local Market Insiders:</strong> Based in key European hubs, we know the local digital landscape, trends, and legal needs.</p>
                                 </li>
                                 <li class="flex items-start reveal-left">
                                     <div class="flex-shrink-0 mt-1">
                                         <svg class="h-5 w-5 text-accent" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
                                     </div>
-                                    <p class="ml-4 text-dim"><strong class="text-[#f0ede8]">Results-Driven:</strong> We focus on measurable outcomes: generating qualified B2B leads and building brand equity.</p>
+                                    <p class="ml-4 text-dim" data-i18n-html="whyUs.item3"><strong class="text-[#f0ede8]">Results-Driven:</strong> We focus on measurable outcomes: generating qualified B2B leads and building brand equity.</p>
                                 </li>
                             </ul>
                         </div>
@@ -353,12 +369,12 @@
                         <svg class="h-12 w-12 text-accent/30 mx-auto" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                             <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
                         </svg>
-                        <p class="mt-8 text-2xl md:text-3xl font-display font-bold leading-snug">
+                        <p class="mt-8 text-2xl md:text-3xl font-display font-bold leading-snug" data-i18n="testimonial.quote">
                             "EightFold was the partner we needed. They didn't just translate our site—they helped us find our voice for the German B2B market and launched our entire LinkedIn presence. We saw qualified leads within the first quarter."
                         </p>
                         <div class="mt-8">
                             <p class="font-semibold text-lg">Li Zhang</p>
-                            <p class="text-dim">Head of International Growth, [Tech Company]</p>
+                            <p class="text-dim" data-i18n="testimonial.role">Head of International Growth, [Tech Company]</p>
                         </div>
                     </div>
                 </div>
@@ -368,12 +384,12 @@
             <section id="contact" class="py-20 md:py-32 bg-void relative overflow-hidden">
                 <div class="absolute inset-0 bg-accent/[0.02] pointer-events-none"></div>
                 <div class="max-w-7xl mx-auto px-6 lg:px-8 text-center relative z-10 reveal-scale">
-                    <h2 class="text-3xl md:text-5xl font-display font-bold">Ready to build your<br>European presence?</h2>
-                    <p class="mt-5 text-lg text-dim max-w-2xl mx-auto">
+                    <h2 class="text-3xl md:text-5xl font-display font-bold" data-i18n-html="cta.title">Ready to build your<br>European presence?</h2>
+                    <p class="mt-5 text-lg text-dim max-w-2xl mx-auto" data-i18n="cta.desc">
                         Let's discuss your goals. Schedule a free, no-obligation consultation with our experts to map out your digital strategy for Europe.
                     </p>
                     <div class="mt-10">
-                        <a href="mailto:consult@eightfold.eu" class="btn-accent px-8 py-3.5 rounded-full text-lg font-semibold inline-block">Schedule Your Free Consultation</a>
+                        <a href="mailto:consult@eightfold.eu" class="btn-accent px-8 py-3.5 rounded-full text-lg font-semibold inline-block" data-i18n="cta.button">Schedule Your Free Consultation</a>
                     </div>
                 </div>
             </section>
@@ -392,38 +408,38 @@
                             </svg>
                             <span class="font-display text-2xl font-bold text-[#f0ede8]">EightFold</span>
                         </a>
-                        <p class="mt-4 text-dim max-w-xs">Your strategic partner for digital expansion from China to Europe.</p>
+                        <p class="mt-4 text-dim max-w-xs" data-i18n="footer.mission">Your strategic partner for digital expansion from China to Europe.</p>
                     </div>
 
                     <div>
-                        <h3 class="text-sm font-semibold text-[#f0ede8] tracking-wider uppercase">Services</h3>
+                        <h3 class="text-sm font-semibold text-[#f0ede8] tracking-wider uppercase" data-i18n="footer.servicesHeading">Services</h3>
                         <ul class="mt-4 space-y-3">
-                            <li><a href="#services" class="text-dim hover:text-accent transition-colors">Website Localization</a></li>
-                            <li><a href="#services" class="text-dim hover:text-accent transition-colors">LinkedIn Strategy</a></li>
-                            <li><a href="#services" class="text-dim hover:text-accent transition-colors">Digital Branding</a></li>
+                            <li><a href="#services" class="text-dim hover:text-accent transition-colors" data-i18n="footer.websiteLocalization">Website Localization</a></li>
+                            <li><a href="#services" class="text-dim hover:text-accent transition-colors" data-i18n="footer.linkedinStrategy">LinkedIn Strategy</a></li>
+                            <li><a href="#services" class="text-dim hover:text-accent transition-colors" data-i18n="footer.digitalBranding">Digital Branding</a></li>
                         </ul>
                     </div>
 
                     <div>
-                        <h3 class="text-sm font-semibold text-[#f0ede8] tracking-wider uppercase">Company</h3>
+                        <h3 class="text-sm font-semibold text-[#f0ede8] tracking-wider uppercase" data-i18n="footer.companyHeading">Company</h3>
                         <ul class="mt-4 space-y-3">
-                            <li><a href="#about" class="text-dim hover:text-accent transition-colors">About Us</a></li>
-                            <li><a href="#why-us" class="text-dim hover:text-accent transition-colors">Why Us</a></li>
-                            <li><a href="#contact" class="text-dim hover:text-accent transition-colors">Contact</a></li>
+                            <li><a href="#about" class="text-dim hover:text-accent transition-colors" data-i18n="footer.aboutUs">About Us</a></li>
+                            <li><a href="#why-us" class="text-dim hover:text-accent transition-colors" data-i18n="footer.whyUs">Why Us</a></li>
+                            <li><a href="#contact" class="text-dim hover:text-accent transition-colors" data-i18n="footer.contact">Contact</a></li>
                         </ul>
                     </div>
 
                     <div>
-                        <h3 class="text-sm font-semibold text-[#f0ede8] tracking-wider uppercase">Legal</h3>
+                        <h3 class="text-sm font-semibold text-[#f0ede8] tracking-wider uppercase" data-i18n="footer.legalHeading">Legal</h3>
                         <ul class="mt-4 space-y-3">
-                            <li><a href="#" class="text-dim hover:text-accent transition-colors">Privacy Policy</a></li>
-                            <li><a href="#" class="text-dim hover:text-accent transition-colors">Imprint</a></li>
+                            <li><a href="#" class="text-dim hover:text-accent transition-colors" data-i18n="footer.privacyPolicy">Privacy Policy</a></li>
+                            <li><a href="#" class="text-dim hover:text-accent transition-colors" data-i18n="footer.imprint">Imprint</a></li>
                         </ul>
                     </div>
                 </div>
 
                 <div class="mt-16 border-t border-border pt-8 flex flex-col md:flex-row justify-between items-center">
-                    <p class="text-sm text-dim">&copy; 2025 EightFold. All rights reserved.</p>
+                    <p class="text-sm text-dim" data-i18n-html="footer.copyright">&copy; 2025 EightFold. All rights reserved.</p>
                     <div class="flex space-x-6 mt-4 md:mt-0">
                         <a href="#" class="text-dim hover:text-accent transition-colors">
                             <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
@@ -441,6 +457,134 @@
     </div><!-- end #page-content -->
 
     <script>
+        // ===== TRANSLATIONS =====
+        const translations = {
+            en: {
+                'page.title': 'EightFold - Your Bridge to the European Market',
+                'nav.services': 'Services',
+                'nav.whyUs': 'Why Us',
+                'nav.about': 'About',
+                'nav.contact': 'Contact',
+                'nav.cta': 'Get Consultation',
+                'hero.title': 'Unlock Your European<br>Market Potential',
+                'hero.subtitle': 'We help innovative Chinese companies build a powerful, authentic digital presence for European audiences\u2014from precision-localized websites to impactful LinkedIn strategies.',
+                'hero.ctaPrimary': 'Schedule Consultation',
+                'hero.ctaSecondary': 'Explore Services',
+                'services.eyebrow': 'Our Services',
+                'services.title': 'Bridge the Gap to Europe',
+                'services.subtitle': 'We provide end-to-end digital solutions to establish your brand\u2019s credibility and voice in the complex European market.',
+                'services.card1Title': 'European Website Localization',
+                'services.card1Desc': 'Go beyond simple translation. We adapt your website\u2019s content, UX, and design to meet the cultural expectations and legal standards (like GDPR) of your target European customers.',
+                'services.card2Title': 'B2B LinkedIn Strategy',
+                'services.card2Desc': 'LinkedIn is the EU\u2019s premier B2B platform. We build your company page, craft executive profiles, and develop content strategies that connect you with European partners, clients, and talent.',
+                'services.card3Title': 'Cross-Cultural Digital Branding',
+                'services.card3Desc': 'Ensure your brand\u2019s message is not just understood, but respected. We help you find an authentic voice that balances your company\u2019s core identity with European market sensitivities.',
+                'whyUs.eyebrow': 'Why Choose Us',
+                'whyUs.title': 'Local Experts,<br>Global Vision',
+                'whyUs.desc': 'We aren\u2019t just translators. We are a boutique team of marketing and localization specialists based in Europe, with deep roots in and understanding of Chinese business culture.',
+                'whyUs.item1': '<strong class="text-[#f0ede8]">Bicultural Fluency:</strong> Native understanding of both Chinese and European business etiquette.',
+                'whyUs.item2': '<strong class="text-[#f0ede8]">Local Market Insiders:</strong> Based in key European hubs, we know the local digital landscape, trends, and legal needs.',
+                'whyUs.item3': '<strong class="text-[#f0ede8]">Results-Driven:</strong> We focus on measurable outcomes: generating qualified B2B leads and building brand equity.',
+                'testimonial.quote': '\u201CEightFold was the partner we needed. They didn\u2019t just translate our site\u2014they helped us find our voice for the German B2B market and launched our entire LinkedIn presence. We saw qualified leads within the first quarter.\u201D',
+                'testimonial.role': 'Head of International Growth, [Tech Company]',
+                'cta.title': 'Ready to build your<br>European presence?',
+                'cta.desc': 'Let\u2019s discuss your goals. Schedule a free, no-obligation consultation with our experts to map out your digital strategy for Europe.',
+                'cta.button': 'Schedule Your Free Consultation',
+                'footer.mission': 'Your strategic partner for digital expansion from China to Europe.',
+                'footer.servicesHeading': 'Services',
+                'footer.websiteLocalization': 'Website Localization',
+                'footer.linkedinStrategy': 'LinkedIn Strategy',
+                'footer.digitalBranding': 'Digital Branding',
+                'footer.companyHeading': 'Company',
+                'footer.aboutUs': 'About Us',
+                'footer.whyUs': 'Why Us',
+                'footer.contact': 'Contact',
+                'footer.legalHeading': 'Legal',
+                'footer.privacyPolicy': 'Privacy Policy',
+                'footer.imprint': 'Imprint',
+                'footer.copyright': '&copy; 2025 EightFold. All rights reserved.',
+            },
+            zh: {
+                'page.title': 'EightFold - \u60A8\u901A\u5F80\u6B27\u6D32\u5E02\u573A\u7684\u6865\u6881',
+                'nav.services': '\u670D\u52A1',
+                'nav.whyUs': '\u4E3A\u4F55\u9009\u62E9\u6211\u4EEC',
+                'nav.about': '\u5173\u4E8E',
+                'nav.contact': '\u8054\u7CFB',
+                'nav.cta': '\u9884\u7EA6\u54A8\u8BE2',
+                'hero.title': '\u5F00\u542F\u60A8\u7684<br>\u6B27\u6D32\u5E02\u573A\u6F5C\u529B',
+                'hero.subtitle': '\u6211\u4EEC\u5E2E\u52A9\u5BCC\u6709\u521B\u65B0\u529B\u7684\u4E2D\u56FD\u4F01\u4E1A\uFF0C\u4E3A\u6B27\u6D32\u53D7\u4F17\u6253\u9020\u5F3A\u5927\u800C\u771F\u5B9E\u7684\u6570\u5B57\u5F62\u8C61\u2014\u2014\u4ECE\u7CBE\u51C6\u672C\u5730\u5316\u7F51\u7AD9\u5230\u9AD8\u5F71\u54CD\u529B\u7684LinkedIn\u7B56\u7565\u3002',
+                'hero.ctaPrimary': '\u9884\u7EA6\u54A8\u8BE2',
+                'hero.ctaSecondary': '\u63A2\u7D22\u670D\u52A1',
+                'services.eyebrow': '\u6211\u4EEC\u7684\u670D\u52A1',
+                'services.title': '\u67B6\u8D77\u901A\u5F80\u6B27\u6D32\u7684\u6865\u6881',
+                'services.subtitle': '\u6211\u4EEC\u63D0\u4F9B\u7AEF\u5230\u7AEF\u7684\u6570\u5B57\u5316\u89E3\u51B3\u65B9\u6848\uFF0C\u5E2E\u52A9\u60A8\u7684\u54C1\u724C\u5728\u590D\u6742\u7684\u6B27\u6D32\u5E02\u573A\u4E2D\u5EFA\u7ACB\u4FE1\u8A89\u4E0E\u58F0\u91CF\u3002',
+                'services.card1Title': '\u6B27\u6D32\u7F51\u7AD9\u672C\u5730\u5316',
+                'services.card1Desc': '\u4E0D\u6B62\u4E8E\u7FFB\u8BD1\u3002\u6211\u4EEC\u4ECE\u5185\u5BB9\u3001\u7528\u6237\u4F53\u9A8C\u5230\u8BBE\u8BA1\u5168\u65B9\u4F4D\u8C03\u6574\u60A8\u7684\u7F51\u7AD9\uFF0C\u4F7F\u5176\u7B26\u5408\u76EE\u6807\u6B27\u6D32\u5BA2\u6237\u7684\u6587\u5316\u671F\u671B\u548C\u6CD5\u5F8B\u6807\u51C6\uFF08\u5982GDPR\uFF09\u3002',
+                'services.card2Title': 'B2B LinkedIn\u7B56\u7565',
+                'services.card2Desc': 'LinkedIn\u662F\u6B27\u76DF\u9996\u5C48\u4E00\u6307\u7684B2B\u5E73\u53F0\u3002\u6211\u4EEC\u5E2E\u60A8\u642D\u5EFA\u516C\u53F8\u4E3B\u9875\u3001\u6253\u9020\u9AD8\u7BA1\u5F62\u8C61\uFF0C\u5E76\u5236\u5B9A\u5185\u5BB9\u7B56\u7565\uFF0C\u52A9\u60A8\u5BF9\u63A5\u6B27\u6D32\u5408\u4F5C\u4F19\u4F34\u3001\u5BA2\u6237\u4E0E\u4EBA\u624D\u3002',
+                'services.card3Title': '\u8DE8\u6587\u5316\u6570\u5B57\u54C1\u724C\u5EFA\u8BBE',
+                'services.card3Desc': '\u786E\u4FDD\u60A8\u7684\u54C1\u724C\u4FE1\u606F\u4E0D\u4EC5\u88AB\u7406\u89E3\uFF0C\u66F4\u53D7\u5230\u5C0A\u91CD\u3002\u6211\u4EEC\u5E2E\u60A8\u627E\u5230\u4E00\u79CD\u65E2\u5FE0\u4E8E\u4F01\u4E1A\u6838\u5FC3\u53C8\u5951\u5408\u6B27\u6D32\u5E02\u573A\u7684\u771F\u5B9E\u54C1\u724C\u58F0\u97F3\u3002',
+                'whyUs.eyebrow': '\u4E3A\u4F55\u9009\u62E9\u6211\u4EEC',
+                'whyUs.title': '\u672C\u5730\u4E13\u5BB6\uFF0C<br>\u5168\u7403\u89C6\u91CE',
+                'whyUs.desc': '\u6211\u4EEC\u4E0D\u53EA\u662F\u7FFB\u8BD1\u3002\u6211\u4EEC\u662F\u4E00\u652F\u624E\u6839\u6B27\u6D32\u7684\u7CBE\u54C1\u8425\u9500\u4E0E\u672C\u5730\u5316\u4E13\u5BB6\u56E2\u961F\uFF0C\u5BF9\u4E2D\u56FD\u5546\u4E1A\u6587\u5316\u6709\u7740\u6DF1\u5165\u7684\u7406\u89E3\u3002',
+                'whyUs.item1': '<strong class="text-[#f0ede8]">\u53CC\u6587\u5316\u6D41\u5229\u5EA6\uFF1A</strong>\u5BF9\u4E2D\u6B27\u5546\u4E1A\u793C\u4EEA\u5747\u6709\u6DF1\u523B\u7684\u6BCD\u8BED\u7EA7\u7406\u89E3\u3002',
+                'whyUs.item2': '<strong class="text-[#f0ede8]">\u672C\u5730\u5E02\u573A\u5185\u884C\uFF1A</strong>\u624E\u6839\u6B27\u6D32\u6838\u5FC3\u57CE\u5E02\uFF0C\u6DF1\u8C19\u5F53\u5730\u6570\u5B57\u751F\u6001\u3001\u8D8B\u52BF\u4E0E\u6CD5\u89C4\u8981\u6C42\u3002',
+                'whyUs.item3': '<strong class="text-[#f0ede8]">\u7ED3\u679C\u5BFC\u5411\uFF1A</strong>\u6211\u4EEC\u4E13\u6CE8\u4E8E\u53EF\u8861\u91CF\u7684\u6210\u679C\uFF1A\u83B7\u53D6\u4F18\u8D28B2B\u5546\u673A\uFF0C\u63D0\u5347\u54C1\u724C\u4EF7\u503C\u3002',
+                'testimonial.quote': '\u201CEightFold\u6B63\u662F\u6211\u4EEC\u9700\u8981\u7684\u5408\u4F5C\u4F19\u4F34\u3002\u4ED6\u4EEC\u4E0D\u53EA\u662F\u7FFB\u8BD1\u4E86\u6211\u4EEC\u7684\u7F51\u7AD9\u2014\u2014\u4ED6\u4EEC\u5E2E\u6211\u4EEC\u627E\u5230\u4E86\u9762\u5411\u5FB7\u56FDB2B\u5E02\u573A\u7684\u54C1\u724C\u58F0\u97F3\uFF0C\u5E76\u5168\u9762\u542F\u52A8\u4E86\u6211\u4EEC\u7684LinkedIn\u8FD0\u8425\u3002\u7B2C\u4E00\u4E2A\u5B63\u5EA6\u6211\u4EEC\u5C31\u770B\u5230\u4E86\u4F18\u8D28\u8BE2\u76D8\u3002\u201D',
+                'testimonial.role': '\u56FD\u9645\u4E1A\u52A1\u589E\u957F\u8D1F\u8D23\u4EBA\uFF0C[\u79D1\u6280\u516C\u53F8]',
+                'cta.title': '\u51C6\u5907\u597D\u6253\u9020\u60A8\u7684<br>\u6B27\u6D32\u5E02\u573A\u5F62\u8C61\u4E86\u5417\uFF1F',
+                'cta.desc': '\u8BA9\u6211\u4EEC\u8BA8\u8BBA\u60A8\u7684\u76EE\u6807\u3002\u9884\u7EA6\u4E00\u6B21\u514D\u8D39\u3001\u65E0\u4EFB\u4F55\u9644\u52A0\u6761\u4EF6\u7684\u4E13\u5BB6\u54A8\u8BE2\uFF0C\u4E3A\u60A8\u91CF\u8EAB\u5B9A\u5236\u6B27\u6D32\u6570\u5B57\u6218\u7565\u3002',
+                'cta.button': '\u9884\u7EA6\u514D\u8D39\u54A8\u8BE2',
+                'footer.mission': '\u60A8\u4ECE\u4E2D\u56FD\u62D3\u5C55\u81F3\u6B27\u6D32\u7684\u6570\u5B57\u5316\u6218\u7565\u4F19\u4F34\u3002',
+                'footer.servicesHeading': '\u670D\u52A1',
+                'footer.websiteLocalization': '\u7F51\u7AD9\u672C\u5730\u5316',
+                'footer.linkedinStrategy': 'LinkedIn\u7B56\u7565',
+                'footer.digitalBranding': '\u6570\u5B57\u54C1\u724C\u5EFA\u8BBE',
+                'footer.companyHeading': '\u516C\u53F8',
+                'footer.aboutUs': '\u5173\u4E8E\u6211\u4EEC',
+                'footer.whyUs': '\u4E3A\u4F55\u9009\u62E9\u6211\u4EEC',
+                'footer.contact': '\u8054\u7CFB\u6211\u4EEC',
+                'footer.legalHeading': '\u6CD5\u5F8B\u4FE1\u606F',
+                'footer.privacyPolicy': '\u9690\u79C1\u653F\u7B56',
+                'footer.imprint': '\u6CD5\u5F8B\u58F0\u660E',
+                'footer.copyright': '&copy; 2025 EightFold. \u7248\u6743\u6240\u6709\u3002',
+            }
+        };
+
+        // ===== LANGUAGE SWITCHING =====
+        function updateLangToggle(lang) {
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                if (btn.dataset.lang === lang) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+        }
+
+        function setLang(lang) {
+            document.documentElement.lang = lang;
+            localStorage.setItem('ef_lang', lang);
+
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[lang][key]) {
+                    el.textContent = translations[lang][key];
+                }
+            });
+
+            document.querySelectorAll('[data-i18n-html]').forEach(el => {
+                const key = el.getAttribute('data-i18n-html');
+                if (translations[lang][key]) {
+                    el.innerHTML = translations[lang][key];
+                }
+            });
+
+            updateLangToggle(lang);
+            document.title = translations[lang]['page.title'];
+        }
+
+        // ===== GSAP & ANIMATIONS =====
         gsap.registerPlugin(ScrollTrigger);
 
         const introOverlay = document.getElementById('intro-overlay');
@@ -565,7 +709,7 @@
                 onComplete: () => startTransition()
             });
 
-            // 1. Draw the "8" path (0–2s)
+            // 1. Draw the "8" path (0-2s)
             tl.to(introPath, {
                 strokeDashoffset: 0,
                 duration: 2,
@@ -746,6 +890,12 @@
                 header.classList.remove('header-scrolled');
             }
         });
+
+        // ===== AUTO-DETECT LANGUAGE + PERSISTENCE =====
+        const savedLang = localStorage.getItem('ef_lang');
+        const browserLang = navigator.language || navigator.userLanguage;
+        const defaultLang = savedLang || (browserLang.startsWith('zh') ? 'zh' : 'en');
+        setLang(defaultLang);
     </script>
 
 </body>
