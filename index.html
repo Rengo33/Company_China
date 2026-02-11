@@ -96,6 +96,7 @@
             display: flex; flex-direction: column;
             align-items: center; justify-content: center;
             clip-path: circle(150% at 50% 50%);
+            will-change: clip-path;
         }
         #intro-brand { opacity: 0; transform: translateY(20px); }
 
@@ -106,13 +107,6 @@
             backdrop-filter: blur(20px);
         }
 
-        /* Noise texture */
-        .noise-overlay {
-            position: fixed; inset: 0;
-            width: 100%; height: 100%;
-            pointer-events: none; z-index: 9000;
-            opacity: 0.03;
-        }
 
         /* Reveal helpers */
         .reveal-up { opacity: 0; transform: translateY(60px); }
@@ -145,17 +139,26 @@
             transform: translateY(-8px);
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
         }
+
+        /* Hero interactive 8 */
+        #hero-eight svg {
+            filter: drop-shadow(0 0 15px rgba(200,255,0,0.15));
+            transition: filter 0.4s ease;
+        }
+        #hero-eight:hover svg {
+            filter: drop-shadow(0 0 35px rgba(200,255,0,0.45));
+        }
+        .hero-eight-path {
+            transition: fill 0.4s ease, stroke-width 0.4s ease;
+        }
+        #hero-eight:hover .hero-eight-path {
+            fill: rgba(200,255,0,0.1);
+            stroke-width: 2.5;
+        }
     </style>
 </head>
 <body class="bg-void text-[#f0ede8] font-body overflow-hidden">
 
-    <!-- Noise texture -->
-    <svg class="noise-overlay" xmlns="http://www.w3.org/2000/svg">
-        <filter id="noise-filter">
-            <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/>
-        </filter>
-        <rect width="100%" height="100%" filter="url(#noise-filter)"/>
-    </svg>
 
     <!-- Custom cursor -->
     <div id="cursor-dot" class="cursor-dot"></div>
@@ -222,7 +225,7 @@
         <main>
 
             <!-- Hero -->
-            <section class="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden">
+            <section class="relative pt-28 pb-16 md:pt-36 md:pb-24 overflow-hidden">
                 <!-- Atmospheric blobs -->
                 <div class="absolute top-1/4 -left-1/4 w-[600px] h-[600px] rounded-full bg-accent/5 blur-[120px] pointer-events-none"></div>
                 <div class="absolute bottom-0 right-0 w-[400px] h-[400px] rounded-full bg-accent/[0.03] blur-[100px] pointer-events-none"></div>
@@ -232,6 +235,15 @@
                 </svg>
 
                 <div class="max-w-7xl mx-auto px-6 lg:px-8 text-center relative z-10">
+                    <!-- Interactive infinity sign -->
+                    <div id="hero-eight" class="flex justify-center mb-8" style="opacity:0">
+                        <svg class="w-[200px] md:w-[280px] h-auto" viewBox="0 0 100 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path class="hero-eight-path"
+                                d="M50 30 C65 10 95 10 95 30 C95 50 65 50 50 30 C35 10 5 10 5 30 C5 50 35 50 50 30Z"
+                                stroke="#c8ff00" stroke-width="2" fill="rgba(200,255,0,0.03)"
+                                stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
                     <h1 class="font-display text-5xl md:text-7xl font-extrabold leading-[1.1] tracking-tight reveal-up">
                         Unlock Your European<br>Market Potential
                     </h1>
@@ -436,25 +448,121 @@
         const skipIntro = sessionStorage.getItem('ef_visited');
 
         function initPage() {
+            if (introOverlay.parentNode) introOverlay.remove();
             document.body.classList.remove('overflow-hidden');
-            initScrollAnimations();
-            initCustomCursor();
+            document.getElementById('hero-eight').style.opacity = '1';
+
+            requestAnimationFrame(() => {
+                window.scrollTo(0, 1);
+                requestAnimationFrame(() => {
+                    window.scrollTo(0, 0);
+                    initScrollAnimations();
+                    initHeroEight();
+                    initCustomCursor();
+                });
+            });
+        }
+
+        function startTransition() {
+            sessionStorage.setItem('ef_visited', '1');
+            document.body.classList.remove('overflow-hidden');
+
+            const heroEightDiv = document.getElementById('hero-eight');
+            const heroSvg = heroEightDiv.querySelector('svg');
+            const introEight = document.getElementById('intro-eight');
+            const introPath = introEight.querySelector('path');
+
+            // Force layout settle (scrollbar reflow)
+            document.body.offsetHeight;
+
+            requestAnimationFrame(() => {
+                window.scrollTo(0, 1);
+                requestAnimationFrame(() => {
+                    window.scrollTo(0, 0);
+
+                    // Measure positions while everything is stable
+                    const targetRect = heroSvg.getBoundingClientRect();
+                    const startRect = introEight.getBoundingClientRect();
+                    const introBrand = document.getElementById('intro-brand');
+                    const brandRect = introBrand.getBoundingClientRect();
+
+                    // Pin brand text at its current position so it doesn't jump
+                    // when the "8" leaves the flex container
+                    gsap.set(introBrand, {
+                        position: 'fixed',
+                        left: brandRect.left,
+                        top: brandRect.top,
+                        width: brandRect.width,
+                        margin: 0
+                    });
+
+                    // Hide during reparent to prevent any flash
+                    introEight.style.visibility = 'hidden';
+
+                    // Reparent to body so it survives overlay removal
+                    document.body.appendChild(introEight);
+
+                    // Set fixed position at exact current visual location in one operation
+                    gsap.set(introEight, {
+                        clearProps: 'transform',
+                        position: 'fixed',
+                        left: startRect.left,
+                        top: startRect.top,
+                        width: startRect.width,
+                        height: startRect.height,
+                        zIndex: 10001,
+                        margin: 0,
+                        pointerEvents: 'none',
+                        visibility: 'visible'
+                    });
+
+                    const tl2 = gsap.timeline();
+
+                    // Fade overlay bg + brand text
+                    tl2.to(introOverlay, { opacity: 0, duration: 0.7, ease: 'power1.out' }, 0);
+
+                    // Fly "8" to hero position + match hero fill
+                    tl2.to(introEight, {
+                        left: targetRect.left,
+                        top: targetRect.top,
+                        width: targetRect.width,
+                        height: targetRect.height,
+                        duration: 1.1,
+                        ease: 'power2.inOut'
+                    }, 0);
+                    tl2.to(introPath, {
+                        attr: { fill: 'rgba(200,255,0,0.03)' },
+                        duration: 0.6
+                    }, 0.4);
+
+                    // Start scroll animations mid-flight
+                    tl2.call(() => {
+                        initScrollAnimations();
+                        initCustomCursor();
+                    }, null, 0.3);
+
+                    // Seamless swap: show hero, remove intro
+                    tl2.call(() => {
+                        heroEightDiv.style.opacity = '1';
+                        // Next frame: remove intro after hero is painted
+                        requestAnimationFrame(() => {
+                            introEight.remove();
+                            introOverlay.remove();
+                            initHeroEight();
+                        });
+                    }, null, 1.1);
+                });
+            });
         }
 
         if (skipIntro) {
-            introOverlay.style.display = 'none';
             initPage();
         } else {
-            // Get path length for stroke animation
             const pathLength = introPath.getTotalLength();
             gsap.set(introPath, { strokeDasharray: pathLength, strokeDashoffset: pathLength });
 
             const tl = gsap.timeline({
-                onComplete: () => {
-                    introOverlay.style.display = 'none';
-                    sessionStorage.setItem('ef_visited', '1');
-                    initPage();
-                }
+                onComplete: () => startTransition()
             });
 
             // 1. Draw the "8" path (0–2s)
@@ -464,38 +572,31 @@
                 ease: 'power2.inOut'
             });
 
-            // 2. Accent glow (2–2.5s)
+            // 2. Accent glow — fill only, no filter for perf
             tl.to(introPath, {
-                attr: { fill: 'rgba(200,255,0,0.08)' },
-                filter: 'drop-shadow(0 0 40px rgba(200,255,0,0.5))',
+                attr: { fill: 'rgba(200,255,0,0.1)' },
+                stroke: 'rgba(200,255,0,1)',
                 duration: 0.5,
                 ease: 'power1.inOut'
             });
 
-            // 3. Scale down + brand reveal (2.5–3.5s)
+            // 3. Scale down + brand reveal (bigger "8" for brand moment)
             tl.to('#intro-eight', {
-                scale: 0.4,
-                y: -40,
-                duration: 1,
-                ease: 'power3.inOut'
-            }, '-=0.2');
+                scale: 0.6,
+                y: -35,
+                duration: 1.4,
+                ease: 'power2.out'
+            }, '-=0.1');
 
             tl.to('#intro-brand', {
                 opacity: 1,
                 y: 0,
-                duration: 0.8,
+                duration: 1,
                 ease: 'power2.out'
-            }, '-=0.6');
+            }, '-=0.7');
 
             // 4. Hold
-            tl.to({}, { duration: 0.7 });
-
-            // 5. Circle wipe reveal
-            tl.to(introOverlay, {
-                clipPath: 'circle(0% at 50% 50%)',
-                duration: 1,
-                ease: 'power2.inOut'
-            });
+            tl.to({}, { duration: 0.5 });
         }
 
         // ===== SCROLL ANIMATIONS =====
@@ -574,6 +675,52 @@
                 el.addEventListener('mouseenter', () => ring.classList.add('hover'));
                 el.addEventListener('mouseleave', () => ring.classList.remove('hover'));
             });
+        }
+
+        // ===== HERO EIGHT INTERACTION =====
+        function initHeroEight() {
+            const heroEight = document.getElementById('hero-eight');
+            if (!heroEight) return;
+
+            // Subtle idle floating
+            let floatTween = gsap.to(heroEight, {
+                y: 10,
+                duration: 2.5,
+                repeat: -1,
+                yoyo: true,
+                ease: 'sine.inOut'
+            });
+
+            // Magnetic parallax on hover (desktop only)
+            if (window.matchMedia('(hover: hover)').matches) {
+                heroEight.addEventListener('mouseenter', () => {
+                    floatTween.pause();
+                });
+
+                heroEight.addEventListener('mousemove', (e) => {
+                    const rect = heroEight.getBoundingClientRect();
+                    const x = (e.clientX - rect.left - rect.width / 2) / rect.width;
+                    const y = (e.clientY - rect.top - rect.height / 2) / rect.height;
+                    gsap.to(heroEight, {
+                        x: x * 25,
+                        y: y * 20,
+                        rotation: x * 8,
+                        duration: 0.4,
+                        ease: 'power2.out',
+                        overwrite: true
+                    });
+                });
+
+                heroEight.addEventListener('mouseleave', () => {
+                    gsap.to(heroEight, {
+                        x: 0, y: 0, rotation: 0,
+                        duration: 0.8,
+                        ease: 'elastic.out(1, 0.4)',
+                        overwrite: true,
+                        onComplete: () => floatTween.restart()
+                    });
+                });
+            }
         }
 
         // ===== MOBILE MENU =====
