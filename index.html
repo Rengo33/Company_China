@@ -38,6 +38,7 @@
     <!-- GSAP -->
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.12/dist/gsap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.12/dist/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12/dist/ScrollToPlugin.min.js"></script>
 
     <style>
         :root {
@@ -49,7 +50,7 @@
             --color-border: #2a2a2a;
         }
 
-        html { scroll-behavior: smooth; }
+        html { scroll-behavior: auto; }
 
         body {
             font-family: 'Space Grotesk', 'Noto Sans SC', sans-serif;
@@ -901,6 +902,17 @@
             } else {
                 header.classList.remove('header-scrolled');
             }
+        });
+
+        // ===== SMOOTH SCROLL VIA GSAP =====
+        document.querySelectorAll('a[href^="#"]').forEach(a => {
+            a.addEventListener('click', e => {
+                const target = document.querySelector(a.getAttribute('href'));
+                if (target) {
+                    e.preventDefault();
+                    gsap.to(window, { scrollTo: { y: target, offsetY: 80 }, duration: 1, ease: 'power2.inOut' });
+                }
+            });
         });
 
         // ===== AUTO-DETECT LANGUAGE + PERSISTENCE =====
