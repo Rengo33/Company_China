@@ -144,6 +144,43 @@
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
         }
 
+        /* Team card */
+        .team-card {
+            transition: transform 0.4s cubic-bezier(0.25,0.46,0.45,0.94);
+        }
+        .team-card:hover {
+            transform: translateY(-6px);
+        }
+        .team-photo {
+            width: 160px; height: 160px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--color-border);
+            transition: border-color 0.4s ease, box-shadow 0.4s ease;
+        }
+        .team-card:hover .team-photo {
+            border-color: var(--color-accent);
+            box-shadow: 0 0 30px rgba(200,255,0,0.15);
+        }
+        .team-placeholder {
+            width: 160px; height: 160px;
+            border-radius: 50%;
+            border: 2px solid var(--color-border);
+            background: rgba(200,255,0,0.08);
+            display: flex; align-items: center; justify-content: center;
+            transition: border-color 0.4s ease, box-shadow 0.4s ease;
+        }
+        .team-card:hover .team-placeholder {
+            border-color: var(--color-accent);
+            box-shadow: 0 0 30px rgba(200,255,0,0.15);
+        }
+        .team-card:hover .team-name {
+            color: var(--color-accent);
+        }
+        .team-name {
+            transition: color 0.3s ease;
+        }
+
         /* Hero interactive 8 */
         #hero-eight svg {
             filter: drop-shadow(0 0 15px rgba(200,255,0,0.15));
@@ -248,7 +285,7 @@
                 <div class="hidden md:flex items-center space-x-8">
                     <a href="#services" class="text-dim hover:text-[#f0ede8] transition-colors" data-i18n="nav.services">Services</a>
                     <a href="#why-us" class="text-dim hover:text-[#f0ede8] transition-colors" data-i18n="nav.expertise">Expertise</a>
-                    <a href="#about" class="text-dim hover:text-[#f0ede8] transition-colors" data-i18n="nav.about">About</a>
+                    <a href="#team" class="text-dim hover:text-[#f0ede8] transition-colors" data-i18n="nav.about">About</a>
                     <a href="#contact" class="text-dim hover:text-[#f0ede8] transition-colors" data-i18n="nav.contact">Contact</a>
                 </div>
 
@@ -278,7 +315,7 @@
                 </div>
                 <a href="#services" class="block px-6 py-3 text-dim hover:text-[#f0ede8] hover:bg-void/50" data-i18n="nav.services">Services</a>
                 <a href="#why-us" class="block px-6 py-3 text-dim hover:text-[#f0ede8] hover:bg-void/50" data-i18n="nav.expertise">Expertise</a>
-                <a href="#about" class="block px-6 py-3 text-dim hover:text-[#f0ede8] hover:bg-void/50" data-i18n="nav.about">About</a>
+                <a href="#team" class="block px-6 py-3 text-dim hover:text-[#f0ede8] hover:bg-void/50" data-i18n="nav.about">About</a>
                 <a href="#contact" class="block px-6 py-3 text-dim hover:text-[#f0ede8] hover:bg-void/50" data-i18n="nav.contact">Contact</a>
                 <div class="p-6">
                     <a href="#contact" class="block w-full text-center btn-accent px-5 py-2.5 rounded-full font-semibold" data-i18n="nav.cta">Get Consultation</a>
@@ -394,8 +431,56 @@
                 </div>
             </section>
 
+            <!-- Team -->
+            <section id="team" class="py-20 md:py-28 bg-surface">
+                <div class="max-w-7xl mx-auto px-6 lg:px-8">
+                    <div class="text-center">
+                        <h2 class="text-sm font-semibold text-accent tracking-[0.2em] uppercase reveal-up" data-i18n="team.eyebrow">Our Team</h2>
+                        <p class="mt-3 text-3xl md:text-5xl font-display font-bold reveal-up" data-i18n="team.title">The Minds Behind EightFold</p>
+                        <p class="mt-5 text-lg text-dim max-w-2xl mx-auto reveal-up" data-i18n="team.subtitle">A team of European market specialists with deep cross-cultural expertise, united by a passion for bridging East and West.</p>
+                    </div>
+
+                    <div class="mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
+                        <!-- Leon -->
+                        <div class="team-card text-center reveal-up">
+                            <div class="flex justify-center mb-6">
+                                <div class="team-placeholder">
+                                    <span class="font-display text-3xl font-bold text-accent">LS</span>
+                                </div>
+                            </div>
+                            <h3 class="team-name text-lg font-display font-bold" data-i18n="team.member1Name">Leon Werner Schmidt</h3>
+                            <p class="mt-1 text-dim text-sm" data-i18n="team.member1Role">Co-Founder</p>
+                        </div>
+                        <!-- Sarah -->
+                        <div class="team-card text-center reveal-up">
+                            <div class="flex justify-center mb-6">
+                                <img src="images/team/sarah.jpg" alt="Sarah Tröger" class="team-photo">
+                            </div>
+                            <h3 class="team-name text-lg font-display font-bold" data-i18n="team.member2Name">Sarah Tröger</h3>
+                            <p class="mt-1 text-dim text-sm" data-i18n="team.member2Role">Co-Founder</p>
+                        </div>
+                        <!-- Tim -->
+                        <div class="team-card text-center reveal-up">
+                            <div class="flex justify-center mb-6">
+                                <img src="images/team/tim.jpg" alt="Tim Kneucke" class="team-photo">
+                            </div>
+                            <h3 class="team-name text-lg font-display font-bold" data-i18n="team.member3Name">Tim Kneucke</h3>
+                            <p class="mt-1 text-dim text-sm" data-i18n="team.member3Role">Co-Founder</p>
+                        </div>
+                        <!-- Jonas -->
+                        <div class="team-card text-center reveal-up">
+                            <div class="flex justify-center mb-6">
+                                <img src="images/team/jonas.jpg" alt="Jonas Gruber" class="team-photo">
+                            </div>
+                            <h3 class="team-name text-lg font-display font-bold" data-i18n="team.member4Name">Jonas Gruber</h3>
+                            <p class="mt-1 text-dim text-sm" data-i18n="team.member4Role">Co-Founder</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             <!-- Testimonial -->
-            <section id="about" class="py-20 md:py-28 bg-surface">
+            <section id="testimonial" class="py-20 md:py-28 bg-void">
                 <div class="max-w-3xl mx-auto px-6 lg:px-8 text-center">
                     <div class="testimonial-reveal">
                         <svg class="h-12 w-12 text-accent/30 mx-auto" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -413,7 +498,7 @@
             </section>
 
             <!-- CTA -->
-            <section id="contact" class="py-20 md:py-32 bg-void relative overflow-hidden">
+            <section id="contact" class="py-20 md:py-32 bg-surface relative overflow-hidden">
                 <div class="absolute inset-0 bg-accent/[0.02] pointer-events-none"></div>
                 <div class="max-w-7xl mx-auto px-6 lg:px-8 text-center relative z-10 reveal-scale">
                     <h2 class="text-3xl md:text-5xl font-display font-bold" data-i18n-html="cta.title">Ready to build your<br>European presence?</h2>
@@ -458,7 +543,7 @@
                     <div>
                         <h3 class="text-sm font-semibold text-[#f0ede8] tracking-wider uppercase" data-i18n="footer.companyHeading">Company</h3>
                         <ul class="mt-4 space-y-3">
-                            <li><a href="#about" class="text-dim hover:text-accent transition-colors" data-i18n="footer.aboutUs">About Us</a></li>
+                            <li><a href="#team" class="text-dim hover:text-accent transition-colors" data-i18n="footer.aboutUs">About Us</a></li>
                             <li><a href="#why-us" class="text-dim hover:text-accent transition-colors" data-i18n="footer.expertise">Expertise</a></li>
                             <li><a href="#contact" class="text-dim hover:text-accent transition-colors" data-i18n="footer.contact">Contact</a></li>
                         </ul>
@@ -515,6 +600,17 @@
                 'services.card3Title': 'Cross-Cultural Digital Branding',
                 'services.card3Desc': 'Ensure your brand\u2019s message is not just understood, but respected. We help you find an authentic voice that balances your company\u2019s core identity with European market sensitivities.',
                 'expertise.heading': 'Expertise from',
+                'team.eyebrow': 'Our Team',
+                'team.title': 'The Minds Behind EightFold',
+                'team.subtitle': 'A team of European market specialists with deep cross-cultural expertise, united by a passion for bridging East and West.',
+                'team.member1Name': 'Leon Werner Schmidt',
+                'team.member1Role': 'Co-Founder',
+                'team.member2Name': 'Sarah Tröger',
+                'team.member2Role': 'Co-Founder',
+                'team.member3Name': 'Tim Kneucke',
+                'team.member3Role': 'Co-Founder',
+                'team.member4Name': 'Jonas Gruber',
+                'team.member4Role': 'Co-Founder',
                 'testimonial.quote': '\u201CEightFold was the partner we needed. They didn\u2019t just translate our site\u2014they helped us find our voice for the German B2B market and launched our entire LinkedIn presence. We saw qualified leads within the first quarter.\u201D',
                 'testimonial.role': 'Head of International Growth, [Tech Company]',
                 'cta.title': 'Ready to build your<br>European presence?',
@@ -555,6 +651,17 @@
                 'services.card3Title': '\u8DE8\u6587\u5316\u6570\u5B57\u54C1\u724C\u5EFA\u8BBE',
                 'services.card3Desc': '\u786E\u4FDD\u60A8\u7684\u54C1\u724C\u4FE1\u606F\u4E0D\u4EC5\u88AB\u7406\u89E3\uFF0C\u66F4\u53D7\u5230\u5C0A\u91CD\u3002\u6211\u4EEC\u5E2E\u60A8\u627E\u5230\u4E00\u79CD\u65E2\u5FE0\u4E8E\u4F01\u4E1A\u6838\u5FC3\u53C8\u5951\u5408\u6B27\u6D32\u5E02\u573A\u7684\u771F\u5B9E\u54C1\u724C\u58F0\u97F3\u3002',
                 'expertise.heading': '\u4E13\u4E1A\u80CC\u666F\u6E90\u81EA',
+                'team.eyebrow': '\u6211\u4EEC\u7684\u56E2\u961F',
+                'team.title': 'EightFold \u80CC\u540E\u7684\u56E2\u961F',
+                'team.subtitle': '\u4E00\u652F\u62E5\u6709\u6DF1\u539A\u8DE8\u6587\u5316\u4E13\u4E1A\u77E5\u8BC6\u7684\u6B27\u6D32\u5E02\u573A\u4E13\u5BB6\u56E2\u961F\uFF0C\u81F4\u529B\u4E8E\u8FDE\u63A5\u4E1C\u65B9\u4E0E\u897F\u65B9\u3002',
+                'team.member1Name': 'Leon Werner Schmidt',
+                'team.member1Role': '\u8054\u5408\u521B\u59CB\u4EBA',
+                'team.member2Name': 'Sarah Tr\u00F6ger',
+                'team.member2Role': '\u8054\u5408\u521B\u59CB\u4EBA',
+                'team.member3Name': 'Tim Kneucke',
+                'team.member3Role': '\u8054\u5408\u521B\u59CB\u4EBA',
+                'team.member4Name': 'Jonas Gruber',
+                'team.member4Role': '\u8054\u5408\u521B\u59CB\u4EBA',
                 'testimonial.quote': '\u201CEightFold\u6B63\u662F\u6211\u4EEC\u9700\u8981\u7684\u5408\u4F5C\u4F19\u4F34\u3002\u4ED6\u4EEC\u4E0D\u53EA\u662F\u7FFB\u8BD1\u4E86\u6211\u4EEC\u7684\u7F51\u7AD9\u2014\u2014\u4ED6\u4EEC\u5E2E\u6211\u4EEC\u627E\u5230\u4E86\u9762\u5411\u5FB7\u56FDB2B\u5E02\u573A\u7684\u54C1\u724C\u58F0\u97F3\uFF0C\u5E76\u5168\u9762\u542F\u52A8\u4E86\u6211\u4EEC\u7684LinkedIn\u8FD0\u8425\u3002\u7B2C\u4E00\u4E2A\u5B63\u5EA6\u6211\u4EEC\u5C31\u770B\u5230\u4E86\u4F18\u8D28\u8BE2\u76D8\u3002\u201D',
                 'testimonial.role': '\u56FD\u9645\u4E1A\u52A1\u589E\u957F\u8D1F\u8D23\u4EBA\uFF0C[\u79D1\u6280\u516C\u53F8]',
                 'cta.title': '准备好打造您的<br>欧洲市场形象了吗？',
