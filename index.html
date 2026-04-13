@@ -113,9 +113,9 @@
 
 
         /* Reveal helpers */
-        .reveal-up { opacity: 0; transform: translateY(60px); }
-        .reveal-left { opacity: 0; transform: translateX(-60px); }
-        .reveal-scale { opacity: 0; transform: scale(0.9); }
+        .reveal-up { opacity: 0; transform: translateY(40px); }
+        .reveal-left { opacity: 0; transform: translateX(-40px); }
+        .reveal-scale { opacity: 0; transform: scale(0.95); }
         .testimonial-reveal { clip-path: inset(0 100% 0 0); }
 
         /* Buttons */
@@ -158,6 +158,18 @@
         #hero-eight:hover .hero-eight-path {
             fill: rgba(200,255,0,0.1);
             stroke-width: 2.5;
+        }
+
+        /* Mobile menu transition */
+        #mobile-menu {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.3s ease;
+            opacity: 0;
+        }
+        #mobile-menu.open {
+            max-height: 400px;
+            opacity: 1;
         }
 
         /* Language toggle */
@@ -223,7 +235,7 @@
     <div id="page-content">
 
         <!-- Header -->
-        <header id="main-header" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 py-5 bg-transparent">
+        <header id="main-header" class="fixed top-0 left-0 right-0 z-50 py-5 bg-transparent" style="transition: background-color 0.3s ease, border-color 0.3s ease, backdrop-filter 0.3s ease;">
             <nav class="max-w-7xl mx-auto px-6 lg:px-8 flex justify-between items-center">
                 <a href="#" class="flex items-center space-x-2.5">
                     <svg class="h-8 w-8" viewBox="0 0 100 60" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -258,7 +270,7 @@
                 </div>
             </nav>
 
-            <div id="mobile-menu" class="hidden md:hidden bg-surface border-t border-border absolute top-full left-0 right-0">
+            <div id="mobile-menu" class="md:hidden bg-surface border-t border-border absolute top-full left-0 right-0">
                 <div class="flex items-center justify-center space-x-2 px-6 py-3 border-b border-border">
                     <button onclick="setLang('en')" class="lang-btn text-sm" data-lang="en">EN</button>
                     <span class="text-dim text-sm">/</span>
@@ -675,8 +687,12 @@
 
                     const tl2 = gsap.timeline();
 
-                    // Fade overlay bg + brand text
-                    tl2.to(introOverlay, { opacity: 0, duration: 0.7, ease: 'power1.out' }, 0);
+                    // Circle-wipe the overlay away (uses the clip-path already set in CSS)
+                    tl2.to(introOverlay, {
+                        clipPath: 'circle(0% at 50% 50%)',
+                        duration: 1,
+                        ease: 'power2.inOut'
+                    }, 0);
 
                     // Fly "8" to hero position + match hero fill
                     tl2.to(introEight, {
@@ -758,37 +774,61 @@
 
         // ===== SCROLL ANIMATIONS =====
         function initScrollAnimations() {
-            // Fade up
-            gsap.utils.toArray('.reveal-up').forEach(el => {
-                gsap.to(el, {
-                    scrollTrigger: { trigger: el, start: 'top 85%', once: true },
-                    opacity: 1, y: 0, duration: 1, ease: 'power3.out',
-                    onComplete() {
-                        el.style.transform = '';
-                        el.style.opacity = '';
-                        el.classList.remove('reveal-up');
-                    }
+            // Group reveal-up elements by their parent section for staggering
+            const revealUpEls = gsap.utils.toArray('.reveal-up');
+            const groups = new Map();
+
+            revealUpEls.forEach(el => {
+                const section = el.closest('section') || el.parentElement;
+                if (!groups.has(section)) groups.set(section, []);
+                groups.get(section).push(el);
+            });
+
+            groups.forEach((els) => {
+                els.forEach((el, i) => {
+                    gsap.to(el, {
+                        scrollTrigger: { trigger: el, start: 'top 88%', once: true },
+                        opacity: 1, y: 0, duration: 0.9, delay: i * 0.12,
+                        ease: 'power2.out',
+                        onComplete() {
+                            el.style.transform = '';
+                            el.style.opacity = '';
+                            el.classList.remove('reveal-up');
+                        }
+                    });
                 });
             });
 
-            // Slide from left
-            gsap.utils.toArray('.reveal-left').forEach((el, i) => {
-                gsap.to(el, {
-                    scrollTrigger: { trigger: el, start: 'top 85%', once: true },
-                    opacity: 1, x: 0, duration: 0.8, delay: i * 0.15, ease: 'power3.out',
-                    onComplete() {
-                        el.style.transform = '';
-                        el.style.opacity = '';
-                        el.classList.remove('reveal-left');
-                    }
+            // Slide from left — stagger per section
+            const revealLeftEls = gsap.utils.toArray('.reveal-left');
+            const leftGroups = new Map();
+
+            revealLeftEls.forEach(el => {
+                const section = el.closest('section') || el.parentElement;
+                if (!leftGroups.has(section)) leftGroups.set(section, []);
+                leftGroups.get(section).push(el);
+            });
+
+            leftGroups.forEach((els) => {
+                els.forEach((el, i) => {
+                    gsap.to(el, {
+                        scrollTrigger: { trigger: el, start: 'top 88%', once: true },
+                        opacity: 1, x: 0, duration: 0.8, delay: i * 0.12,
+                        ease: 'power2.out',
+                        onComplete() {
+                            el.style.transform = '';
+                            el.style.opacity = '';
+                            el.classList.remove('reveal-left');
+                        }
+                    });
                 });
             });
 
             // Scale reveal
             gsap.utils.toArray('.reveal-scale').forEach(el => {
                 gsap.to(el, {
-                    scrollTrigger: { trigger: el, start: 'top 85%', once: true },
-                    opacity: 1, scale: 1, duration: 1.2, ease: 'power3.out',
+                    scrollTrigger: { trigger: el, start: 'top 88%', once: true },
+                    opacity: 1, scale: 1, duration: 1, ease: 'power2.out',
                     onComplete() {
                         el.style.transform = '';
                         el.style.opacity = '';
@@ -801,7 +841,11 @@
             gsap.utils.toArray('.testimonial-reveal').forEach(el => {
                 gsap.to(el, {
                     scrollTrigger: { trigger: el, start: 'top 80%', once: true },
-                    clipPath: 'inset(0 0% 0 0)', duration: 1.2, ease: 'power3.inOut'
+                    clipPath: 'inset(0 0% 0 0)', duration: 1.2, ease: 'power3.inOut',
+                    onComplete() {
+                        el.style.clipPath = '';
+                        el.classList.remove('testimonial-reveal');
+                    }
                 });
             });
 
@@ -885,12 +929,12 @@
         const mobileMenu = document.getElementById('mobile-menu');
 
         menuBtn.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
+            mobileMenu.classList.toggle('open');
         });
 
         document.querySelectorAll('#mobile-menu a').forEach(link => {
             link.addEventListener('click', () => {
-                mobileMenu.classList.add('hidden');
+                mobileMenu.classList.remove('open');
             });
         });
 
