@@ -375,21 +375,21 @@
                 <!-- Replace placeholder SVGs in logos/ with actual company logos -->
                 <div class="marquee-container">
                     <div class="marquee-track">
-                        <img src="logos/amazon.svg" alt="Amazon">
-                        <img src="logos/audi.svg" alt="Audi">
-                        <img src="logos/sky.svg" alt="Sky">
-                        <img src="logos/lse.svg" alt="LSE">
-                        <img src="logos/nova-sbe.svg" alt="NOVA SBE">
-                        <img src="logos/amazon.svg" alt="Amazon">
-                        <img src="logos/audi.svg" alt="Audi">
-                        <img src="logos/sky.svg" alt="Sky">
-                        <img src="logos/lse.svg" alt="LSE">
-                        <img src="logos/nova-sbe.svg" alt="NOVA SBE">
-                        <img src="logos/amazon.svg" alt="Amazon">
-                        <img src="logos/audi.svg" alt="Audi">
-                        <img src="logos/sky.svg" alt="Sky">
-                        <img src="logos/lse.svg" alt="LSE">
-                        <img src="logos/nova-sbe.svg" alt="NOVA SBE">
+                        <a href="https://www.amazon.com" target="_blank" rel="noopener noreferrer"><img src="logos/amazon.svg" alt="Amazon"></a>
+                        <a href="https://www.audi.com" target="_blank" rel="noopener noreferrer"><img src="logos/audi.svg" alt="Audi"></a>
+                        <a href="https://www.sky.com" target="_blank" rel="noopener noreferrer"><img src="logos/sky.svg" alt="Sky"></a>
+                        <a href="https://www.lse.ac.uk" target="_blank" rel="noopener noreferrer"><img src="logos/lse.svg" alt="LSE"></a>
+                        <a href="https://www.novasbe.unl.pt" target="_blank" rel="noopener noreferrer"><img src="logos/nova-sbe.svg" alt="NOVA SBE"></a>
+                        <a href="https://www.amazon.com" target="_blank" rel="noopener noreferrer"><img src="logos/amazon.svg" alt="Amazon"></a>
+                        <a href="https://www.audi.com" target="_blank" rel="noopener noreferrer"><img src="logos/audi.svg" alt="Audi"></a>
+                        <a href="https://www.sky.com" target="_blank" rel="noopener noreferrer"><img src="logos/sky.svg" alt="Sky"></a>
+                        <a href="https://www.lse.ac.uk" target="_blank" rel="noopener noreferrer"><img src="logos/lse.svg" alt="LSE"></a>
+                        <a href="https://www.novasbe.unl.pt" target="_blank" rel="noopener noreferrer"><img src="logos/nova-sbe.svg" alt="NOVA SBE"></a>
+                        <a href="https://www.amazon.com" target="_blank" rel="noopener noreferrer"><img src="logos/amazon.svg" alt="Amazon"></a>
+                        <a href="https://www.audi.com" target="_blank" rel="noopener noreferrer"><img src="logos/audi.svg" alt="Audi"></a>
+                        <a href="https://www.sky.com" target="_blank" rel="noopener noreferrer"><img src="logos/sky.svg" alt="Sky"></a>
+                        <a href="https://www.lse.ac.uk" target="_blank" rel="noopener noreferrer"><img src="logos/lse.svg" alt="LSE"></a>
+                        <a href="https://www.novasbe.unl.pt" target="_blank" rel="noopener noreferrer"><img src="logos/nova-sbe.svg" alt="NOVA SBE"></a>
                     </div>
                 </div>
             </section>
@@ -883,13 +883,17 @@
             const heroEight = document.getElementById('hero-eight');
             if (!heroEight) return;
 
-            // Subtle idle floating
+            // Clear any residual transforms from intro transition
+            gsap.set(heroEight, { clearProps: 'x,y,rotation,scale' });
+
+            // Subtle idle floating — ease in gently to avoid a jump
             let floatTween = gsap.to(heroEight, {
-                y: 10,
-                duration: 2.5,
+                y: 8,
+                duration: 3,
                 repeat: -1,
                 yoyo: true,
-                ease: 'sine.inOut'
+                ease: 'sine.inOut',
+                delay: 0.3
             });
 
             // Magnetic parallax on hover (desktop only)
@@ -903,10 +907,10 @@
                     const x = (e.clientX - rect.left - rect.width / 2) / rect.width;
                     const y = (e.clientY - rect.top - rect.height / 2) / rect.height;
                     gsap.to(heroEight, {
-                        x: x * 25,
-                        y: y * 20,
-                        rotation: x * 8,
-                        duration: 0.4,
+                        x: x * 20,
+                        y: y * 15,
+                        rotation: x * 5,
+                        duration: 0.5,
                         ease: 'power2.out',
                         overwrite: true
                     });
@@ -915,10 +919,13 @@
                 heroEight.addEventListener('mouseleave', () => {
                     gsap.to(heroEight, {
                         x: 0, y: 0, rotation: 0,
-                        duration: 0.8,
-                        ease: 'elastic.out(1, 0.4)',
+                        duration: 1,
+                        ease: 'power3.out',
                         overwrite: true,
-                        onComplete: () => floatTween.restart()
+                        onComplete: () => {
+                            floatTween.progress(0);
+                            floatTween.play();
+                        }
                     });
                 });
             }
