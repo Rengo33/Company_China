@@ -66,26 +66,28 @@
             body.cursor-ready a, body.cursor-ready button { cursor: none; }
 
             .cursor-dot {
-                position: fixed; top: -20px; left: -20px;
+                position: fixed; top: 0; left: 0;
                 width: 8px; height: 8px;
+                margin: -4px 0 0 -4px;
                 background: var(--color-accent);
                 border-radius: 50%;
                 pointer-events: none; z-index: 9999;
-                mix-blend-mode: difference;
-                transform: translate(-50%, -50%);
+                will-change: transform;
+                transform: translate3d(-100px, -100px, 0);
             }
             .cursor-ring {
-                position: fixed; top: -20px; left: -20px;
+                position: fixed; top: 0; left: 0;
                 width: 40px; height: 40px;
+                margin: -20px 0 0 -20px;
                 border: 1.5px solid var(--color-accent);
                 border-radius: 50%;
                 pointer-events: none; z-index: 9998;
-                mix-blend-mode: difference;
-                transform: translate(-50%, -50%);
-                transition: width 0.3s ease, height 0.3s ease, opacity 0.3s ease;
+                will-change: transform;
+                transform: translate3d(-100px, -100px, 0);
+                transition: width 0.3s ease, height 0.3s ease, margin 0.3s ease, opacity 0.3s ease;
             }
             .cursor-ring.hover {
-                width: 60px; height: 60px; opacity: 0.6;
+                width: 60px; height: 60px; margin: -30px 0 0 -30px; opacity: 0.6;
             }
         }
         @media (hover: none), (pointer: coarse) {
@@ -461,17 +463,17 @@
 
                     <div class="mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
                         <!-- Leon -->
-                        <div class="team-card text-center reveal-up">
+                        <a href="https://www.linkedin.com/in/leon-werner-schmidt" target="_blank" rel="noopener" class="team-card block text-center reveal-up">
                             <div class="flex justify-center mb-6">
-                                <div class="team-placeholder">
-                                    <span class="font-display text-3xl font-bold text-accent">LS</span>
+                                <div class="team-photo-wrap">
+                                    <img src="images/team/leon.jpg" alt="Leon Werner Schmidt" class="team-photo">
                                 </div>
                             </div>
                             <h3 class="team-name text-lg font-display font-bold" data-i18n="team.member1Name">Leon Werner Schmidt</h3>
                             <p class="mt-1 text-dim text-sm" data-i18n="team.member1Role">Co-Founder</p>
-                        </div>
+                        </a>
                         <!-- Sarah -->
-                        <div class="team-card text-center reveal-up">
+                        <a href="https://www.linkedin.com/in/sarah-trojer-8944a4224/" target="_blank" rel="noopener" class="team-card block text-center reveal-up">
                             <div class="flex justify-center mb-6">
                                 <div class="team-photo-wrap">
                                     <img src="images/team/sarah.jpg" alt="Sarah Tröger" class="team-photo">
@@ -479,9 +481,9 @@
                             </div>
                             <h3 class="team-name text-lg font-display font-bold" data-i18n="team.member2Name">Sarah Tröger</h3>
                             <p class="mt-1 text-dim text-sm" data-i18n="team.member2Role">Co-Founder</p>
-                        </div>
+                        </a>
                         <!-- Tim -->
-                        <div class="team-card text-center reveal-up">
+                        <a href="https://www.linkedin.com/in/timkeunecke" target="_blank" rel="noopener" class="team-card block text-center reveal-up">
                             <div class="flex justify-center mb-6">
                                 <div class="team-photo-wrap">
                                     <img src="images/team/tim.jpg" alt="Tim Kneucke" class="team-photo">
@@ -489,9 +491,9 @@
                             </div>
                             <h3 class="team-name text-lg font-display font-bold" data-i18n="team.member3Name">Tim Kneucke</h3>
                             <p class="mt-1 text-dim text-sm" data-i18n="team.member3Role">Co-Founder</p>
-                        </div>
+                        </a>
                         <!-- Jonas -->
-                        <div class="team-card text-center reveal-up">
+                        <a href="https://www.linkedin.com/in/jonas-felix-gruhler" target="_blank" rel="noopener" class="team-card block text-center reveal-up">
                             <div class="flex justify-center mb-6">
                                 <div class="team-photo-wrap">
                                     <img src="images/team/jonas.jpg" alt="Jonas Gruber" class="team-photo">
@@ -499,7 +501,7 @@
                             </div>
                             <h3 class="team-name text-lg font-display font-bold" data-i18n="team.member4Name">Jonas Gruber</h3>
                             <p class="mt-1 text-dim text-sm" data-i18n="team.member4Role">Co-Founder</p>
-                        </div>
+                        </a>
                     </div>
                 </div>
             </section>
@@ -992,21 +994,31 @@
             const dot = document.getElementById('cursor-dot');
             const ring = document.getElementById('cursor-ring');
 
-            const moveDotX = gsap.quickTo(dot, 'left', { duration: 0.15, ease: 'power2.out' });
-            const moveDotY = gsap.quickTo(dot, 'top', { duration: 0.15, ease: 'power2.out' });
-            const moveRingX = gsap.quickTo(ring, 'left', { duration: 0.4, ease: 'power2.out' });
-            const moveRingY = gsap.quickTo(ring, 'top', { duration: 0.4, ease: 'power2.out' });
+            let mouseX = -100, mouseY = -100;
+            let dotX = -100, dotY = -100;
+            let ringX = -100, ringY = -100;
 
             window.addEventListener('mousemove', e => {
-                moveDotX(e.clientX);
-                moveDotY(e.clientY);
-                moveRingX(e.clientX);
-                moveRingY(e.clientY);
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+            }, { passive: true });
+
+            gsap.ticker.add(() => {
+                // Tight follow for dot, looser trail for ring — cheap lerp on transform only
+                dotX += (mouseX - dotX) * 0.35;
+                dotY += (mouseY - dotY) * 0.35;
+                ringX += (mouseX - ringX) * 0.18;
+                ringY += (mouseY - ringY) * 0.18;
+                dot.style.transform = `translate3d(${dotX}px, ${dotY}px, 0)`;
+                ring.style.transform = `translate3d(${ringX}px, ${ringY}px, 0)`;
             });
 
-            document.querySelectorAll('a, button').forEach(el => {
-                el.addEventListener('mouseenter', () => ring.classList.add('hover'));
-                el.addEventListener('mouseleave', () => ring.classList.remove('hover'));
+            // Event delegation — cheaper than attaching listeners to every a/button
+            document.addEventListener('mouseover', e => {
+                if (e.target.closest('a, button')) ring.classList.add('hover');
+            });
+            document.addEventListener('mouseout', e => {
+                if (e.target.closest('a, button')) ring.classList.remove('hover');
             });
         }
 
