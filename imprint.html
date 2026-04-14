@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Imprint · Impressum — EightFold</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: { extend: { colors: {
+                void:'#0a0a0a', surface:'#121110', rice:'#f4ece0', ink:'#d5cbba',
+                dim:'#807567', mute:'#4a443c', border:'#2a2723', accent:'#c8ff00',
+            }}}
+        }
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=JetBrains+Mono:wght@300;400;500&family=Noto+Serif+SC:wght@400;500;700;900&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --color-void:#0a0a0a; --color-surface:#121110; --color-rice:#f4ece0;
+            --color-ink:#d5cbba; --color-dim:#807567; --color-border:#2a2723;
+            --color-accent:#c8ff00;
+        }
+        body {
+            font-family: 'Fraunces', 'Noto Serif SC', serif;
+            font-optical-sizing: auto; font-weight: 380;
+            background: var(--color-void); color: var(--color-rice);
+            -webkit-font-smoothing: antialiased;
+        }
+        .display { font-family: 'Syne', 'Noto Serif SC', serif; font-weight: 800; letter-spacing: -0.02em; }
+        .mono    { font-family: 'JetBrains Mono', monospace; }
+        .han     { font-family: 'Noto Serif SC', serif; }
+        .eyebrow {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem; letter-spacing: 0.22em;
+            text-transform: uppercase; color: var(--color-dim);
+        }
+        a.legal-link { color: var(--color-ink); border-bottom: 1px solid var(--color-border); transition: color 0.3s, border-color 0.3s; }
+        a.legal-link:hover { color: var(--color-accent); border-color: var(--color-accent); }
+        .rule { border-top: 1px solid var(--color-border); }
+    </style>
+</head>
+<body>
+
+    <!-- Simple header -->
+    <header class="border-b border-border">
+        <nav class="max-w-[1000px] mx-auto px-8 py-6 flex justify-between items-center">
+            <a href="index.html" class="flex items-center space-x-3">
+                <svg class="h-6 w-6" viewBox="0 0 100 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M50 30 C65 10 95 10 95 30 C95 50 65 50 50 30 C35 10 5 10 5 30 C5 50 35 50 50 30Z"
+                        stroke="#c8ff00" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span class="display text-lg">EightFold</span>
+                <span class="han text-sm text-[color:var(--color-dim)]">八重</span>
+            </a>
+            <a href="index.html" class="mono text-xs uppercase tracking-[0.14em] text-[color:var(--color-dim)] hover:text-[color:var(--color-accent)] transition-colors">← Back</a>
+        </nav>
+    </header>
+
+    <main class="max-w-[1000px] mx-auto px-8 py-20 md:py-28">
+        <div class="eyebrow mb-6">Legal · 法律声明</div>
+        <h1 class="display text-5xl md:text-7xl leading-[1.02] mb-12">
+            Imprint<br>
+            <span class="han text-[color:var(--color-dim)] text-3xl md:text-4xl">法律声明</span>
+        </h1>
+
+        <p class="text-[color:var(--color-ink)] text-lg leading-relaxed max-w-2xl mb-12">
+            Information in accordance with § 5 DDG (German Digital Services Act) and § 18 MStV.
+        </p>
+
+        <div class="rule mb-12"></div>
+
+        <!-- Responsible party -->
+        <section class="mb-16">
+            <div class="eyebrow mb-4">Responsible · Verantwortlich</div>
+            <div class="text-lg leading-relaxed">
+                <p class="display text-2xl mb-4">Leon Werner Schmidt</p>
+                <p class="text-[color:var(--color-ink)]">Einzelunternehmen (sole proprietorship)</p>
+                <p class="text-[color:var(--color-ink)] mt-4">
+                    Rolf-Nolting-Straße 12<br>
+                    38448 Wolfsburg<br>
+                    Niedersachsen, Deutschland
+                </p>
+            </div>
+        </section>
+
+        <!-- Contact -->
+        <section class="mb-16">
+            <div class="eyebrow mb-4">Contact · Kontakt</div>
+            <div class="text-lg">
+                <p class="text-[color:var(--color-ink)] mb-2">
+                    Email: <a href="mailto:info@eightfold.work" class="legal-link">info@eightfold.work</a>
+                </p>
+                <p class="text-[color:var(--color-ink)]">
+                    Web: <a href="https://eightfold.work" class="legal-link">eightfold.work</a>
+                </p>
+            </div>
+        </section>
+
+        <!-- VAT / tax -->
+        <section class="mb-16">
+            <div class="eyebrow mb-4">VAT &amp; Tax · Umsatzsteuer</div>
+            <p class="text-[color:var(--color-ink)] leading-relaxed">
+                <!-- TODO — fill in once issued by the Finanzamt.
+                     Steuernummer is the domestic tax number (required).
+                     USt-IdNr. is the EU VAT ID (required for cross-border B2B within the EU). -->
+                <span class="block">Steuernummer: <span class="text-[color:var(--color-dim)] mono text-sm">pending — will be added once issued by the Finanzamt Wolfsburg.</span></span>
+                <span class="block mt-2">USt-IdNr. (EU VAT ID) per § 27a UStG: <span class="text-[color:var(--color-dim)] mono text-sm">pending — will be added once issued.</span></span>
+            </p>
+        </section>
+
+        <!-- Editorial responsibility -->
+        <section class="mb-16">
+            <div class="eyebrow mb-4">Content responsibility · Inhaltlich verantwortlich (§ 18 MStV)</div>
+            <p class="text-[color:var(--color-ink)] leading-relaxed">
+                Leon Werner Schmidt · Rolf-Nolting-Straße 12 · 38448 Wolfsburg · Germany
+            </p>
+        </section>
+
+        <div class="rule mb-12"></div>
+
+        <!-- EU dispute resolution -->
+        <section class="mb-16">
+            <div class="eyebrow mb-4">EU Online Dispute Resolution</div>
+            <p class="text-[color:var(--color-ink)] leading-relaxed">
+                The European Commission provides a platform for online dispute resolution (ODR):
+                <a href="https://ec.europa.eu/consumers/odr/" class="legal-link" target="_blank" rel="noopener">
+                    ec.europa.eu/consumers/odr
+                </a>.
+                We are not obliged nor willing to participate in dispute resolution proceedings before a
+                consumer arbitration board.
+            </p>
+        </section>
+
+        <!-- Liability -->
+        <section class="mb-16">
+            <div class="eyebrow mb-4">Liability for Content</div>
+            <p class="text-[color:var(--color-ink)] leading-relaxed">
+                As a service provider, we are responsible for our own content on these pages in accordance with
+                § 7(1) DDG and general law. According to §§ 8 to 10 DDG, we are not obliged to monitor transmitted
+                or stored third-party information or to investigate circumstances that indicate illegal activity.
+                Obligations to remove or block the use of information in accordance with general law remain unaffected.
+            </p>
+        </section>
+
+        <section class="mb-16">
+            <div class="eyebrow mb-4">Liability for Links</div>
+            <p class="text-[color:var(--color-ink)] leading-relaxed">
+                Our site contains links to external third-party websites over whose content we have no influence.
+                Therefore, we cannot assume any liability for this external content. The respective provider or
+                operator of the linked pages is always responsible for the content of those pages.
+            </p>
+        </section>
+
+        <section class="mb-16">
+            <div class="eyebrow mb-4">Copyright</div>
+            <p class="text-[color:var(--color-ink)] leading-relaxed">
+                The content and works on these pages created by the site operator are subject to German copyright law.
+                Duplication, processing, distribution, or any form of commercialization of such material beyond the
+                scope of copyright law requires the written consent of the respective author.
+            </p>
+        </section>
+
+        <div class="rule mb-12"></div>
+
+        <p class="text-[color:var(--color-dim)] mono text-xs tracking-[0.14em] uppercase">
+            Last updated: April 2026
+        </p>
+    </main>
+
+    <footer class="border-t border-border">
+        <div class="max-w-[1000px] mx-auto px-8 py-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <p class="mono text-xs text-[color:var(--color-dim)] tracking-[0.14em] uppercase">
+                © 2026 EightFold · Leon Werner Schmidt (Einzelunternehmen)
+            </p>
+            <div class="flex gap-6 text-sm">
+                <a href="index.html" class="text-[color:var(--color-ink)] hover:text-[color:var(--color-accent)] transition-colors">Home</a>
+                <a href="privacy.html" class="text-[color:var(--color-ink)] hover:text-[color:var(--color-accent)] transition-colors">Privacy</a>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

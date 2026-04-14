@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy · Datenschutz — EightFold</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: { extend: { colors: {
+                void:'#0a0a0a', surface:'#121110', rice:'#f4ece0', ink:'#d5cbba',
+                dim:'#807567', mute:'#4a443c', border:'#2a2723', accent:'#c8ff00',
+            }}}
+        }
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=JetBrains+Mono:wght@300;400;500&family=Noto+Serif+SC:wght@400;500;700;900&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --color-void:#0a0a0a; --color-surface:#121110; --color-rice:#f4ece0;
+            --color-ink:#d5cbba; --color-dim:#807567; --color-border:#2a2723;
+            --color-accent:#c8ff00;
+        }
+        body {
+            font-family: 'Fraunces', 'Noto Serif SC', serif;
+            font-optical-sizing: auto; font-weight: 380;
+            background: var(--color-void); color: var(--color-rice);
+            -webkit-font-smoothing: antialiased;
+        }
+        .display { font-family: 'Syne', 'Noto Serif SC', serif; font-weight: 800; letter-spacing: -0.02em; }
+        .mono    { font-family: 'JetBrains Mono', monospace; }
+        .han     { font-family: 'Noto Serif SC', serif; }
+        .eyebrow {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem; letter-spacing: 0.22em;
+            text-transform: uppercase; color: var(--color-dim);
+        }
+        a.legal-link { color: var(--color-ink); border-bottom: 1px solid var(--color-border); transition: color 0.3s, border-color 0.3s; }
+        a.legal-link:hover { color: var(--color-accent); border-color: var(--color-accent); }
+        .rule { border-top: 1px solid var(--color-border); }
+        h2 { font-family: 'Syne', 'Noto Serif SC', serif; font-weight: 800; }
+        p, li { color: var(--color-ink); line-height: 1.75; }
+        ul { list-style: disc; padding-left: 1.4rem; }
+        li { margin-bottom: 0.4rem; }
+    </style>
+</head>
+<body>
+
+    <header class="border-b border-border">
+        <nav class="max-w-[1000px] mx-auto px-8 py-6 flex justify-between items-center">
+            <a href="index.html" class="flex items-center space-x-3">
+                <svg class="h-6 w-6" viewBox="0 0 100 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M50 30 C65 10 95 10 95 30 C95 50 65 50 50 30 C35 10 5 10 5 30 C5 50 35 50 50 30Z"
+                        stroke="#c8ff00" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span class="display text-lg">EightFold</span>
+                <span class="han text-sm text-[color:var(--color-dim)]">八重</span>
+            </a>
+            <a href="index.html" class="mono text-xs uppercase tracking-[0.14em] text-[color:var(--color-dim)] hover:text-[color:var(--color-accent)] transition-colors">← Back</a>
+        </nav>
+    </header>
+
+    <main class="max-w-[1000px] mx-auto px-8 py-20 md:py-28">
+        <div class="eyebrow mb-6">Privacy · 隐私政策</div>
+        <h1 class="display text-5xl md:text-7xl leading-[1.02] mb-12">
+            Privacy Policy<br>
+            <span class="han text-[color:var(--color-dim)] text-3xl md:text-4xl">隐私政策</span>
+        </h1>
+
+        <p class="text-lg max-w-2xl mb-12">
+            We take the protection of your personal data seriously. This page explains what information we collect,
+            why, and what your rights are under the EU General Data Protection Regulation (GDPR).
+        </p>
+
+        <div class="rule mb-12"></div>
+
+        <section class="mb-12">
+            <h2 class="text-2xl mb-4">1 · Controller</h2>
+            <p>
+                The data controller responsible for this website is:<br>
+                <strong class="text-[color:var(--color-rice)]">Leon Werner Schmidt</strong> (Einzelunternehmen)<br>
+                Rolf-Nolting-Straße 12, 38448 Wolfsburg, Germany<br>
+                Email: <a href="mailto:info@eightfold.work" class="legal-link">info@eightfold.work</a>
+            </p>
+        </section>
+
+        <section class="mb-12">
+            <h2 class="text-2xl mb-4">2 · What we collect</h2>
+            <p class="mb-4">When you visit <strong>eightfold.work</strong>, the following may be processed:</p>
+            <ul>
+                <li><strong>Server logs</strong> (processed by our hosting provider, Vercel): IP address, timestamp, request URL, referrer, user agent. Retained only for as long as necessary for security and troubleshooting.</li>
+                <li><strong>Contact data you actively provide</strong>: name, email, company and message when you email us or book a call via Google Calendar.</li>
+                <li><strong>Language preference</strong>: stored locally in your browser (localStorage) so the site remembers your choice. This never leaves your device.</li>
+                <li><strong>Intro animation flag</strong>: a single localStorage entry so we don't replay the intro animation on return visits.</li>
+            </ul>
+            <p class="mt-4 text-sm text-[color:var(--color-dim)] mono">
+                We do <strong class="text-[color:var(--color-rice)]">not</strong> use tracking cookies, third-party analytics,
+                Google Analytics, Facebook Pixel, or advertising trackers on this site.
+            </p>
+        </section>
+
+        <section class="mb-12">
+            <h2 class="text-2xl mb-4">3 · Legal bases (Art. 6 GDPR)</h2>
+            <ul>
+                <li><strong>Art. 6(1)(b)</strong> — processing necessary to take pre-contractual steps at your request (responding to enquiries, scheduling calls).</li>
+                <li><strong>Art. 6(1)(f)</strong> — legitimate interest in maintaining a secure, functional website (server logs).</li>
+                <li><strong>Art. 6(1)(a)</strong> — consent, where applicable (e.g. if you voluntarily share information in a conversation).</li>
+            </ul>
+        </section>
+
+        <section class="mb-12">
+            <h2 class="text-2xl mb-4">4 · Processors we use</h2>
+            <ul>
+                <li><strong>Vercel Inc.</strong> — hosting (USA/EU). Data processing agreement in place. See <a href="https://vercel.com/legal/privacy-policy" class="legal-link" target="_blank" rel="noopener">Vercel's privacy policy</a>.</li>
+                <li><strong>Google Fonts</strong> — fonts are loaded from Google's CDN (fonts.googleapis.com, fonts.gstatic.com). Your IP is transmitted to Google to serve the files. See <a href="https://policies.google.com/privacy" class="legal-link" target="_blank" rel="noopener">Google's privacy policy</a>.</li>
+                <li><strong>jsDelivr</strong> — delivery of the GSAP animation library. See <a href="https://www.jsdelivr.com/terms/privacy-policy-jsdelivr-net" class="legal-link" target="_blank" rel="noopener">jsDelivr's privacy policy</a>.</li>
+                <li><strong>Google Calendar</strong> — when you choose to book a call via our scheduling link, you are directed to Google Calendar. See <a href="https://policies.google.com/privacy" class="legal-link" target="_blank" rel="noopener">Google's privacy policy</a>.</li>
+                <li><strong>Cloudflare / Tailwind CDN</strong> — the Tailwind CSS framework is delivered from the Tailwind CDN. Your IP is transmitted to serve the file.</li>
+            </ul>
+            <p class="mt-4 text-sm text-[color:var(--color-dim)] mono">
+                <!-- TODO: confirm each processor is accurate for your deployment and add any further sub-processors (email, analytics if added later). -->
+                If you add analytics or an email service later, update this list.
+            </p>
+        </section>
+
+        <section class="mb-12">
+            <h2 class="text-2xl mb-4">5 · International transfers</h2>
+            <p>
+                Some of the processors above are based in or transfer data to third countries (notably the United States).
+                Where applicable, transfers are based on the EU Standard Contractual Clauses (SCCs) in accordance with
+                Art. 46 GDPR.
+            </p>
+        </section>
+
+        <section class="mb-12">
+            <h2 class="text-2xl mb-4">6 · Retention</h2>
+            <p>
+                Server logs are retained only as long as necessary for operational and security purposes (typically up to
+                30 days). Contact correspondence is retained for as long as needed to serve your request and in line with
+                statutory retention obligations (up to 6–10 years for commercial correspondence under HGB/AO).
+            </p>
+        </section>
+
+        <section class="mb-12">
+            <h2 class="text-2xl mb-4">7 · Your rights</h2>
+            <p class="mb-3">Under GDPR you have the right to:</p>
+            <ul>
+                <li>Access your personal data (Art. 15)</li>
+                <li>Request correction (Art. 16) or deletion (Art. 17)</li>
+                <li>Restrict or object to processing (Art. 18, 21)</li>
+                <li>Data portability (Art. 20)</li>
+                <li>Withdraw consent at any time (Art. 7), without affecting the lawfulness of prior processing</li>
+                <li>Lodge a complaint with a supervisory authority — in Niedersachsen:
+                    <a href="https://lfd.niedersachsen.de" class="legal-link" target="_blank" rel="noopener">Landesbeauftragte für den Datenschutz Niedersachsen</a>
+                </li>
+            </ul>
+            <p class="mt-4">
+                To exercise any of these rights, write to
+                <a href="mailto:info@eightfold.work" class="legal-link">info@eightfold.work</a>.
+            </p>
+        </section>
+
+        <section class="mb-12">
+            <h2 class="text-2xl mb-4">8 · Security</h2>
+            <p>
+                The site is served over HTTPS. We apply standard technical and organizational measures to protect your
+                data. No online transmission can be guaranteed 100% secure, but we commit to notify you and the competent
+                authority in the unlikely event of a data breach affecting your rights.
+            </p>
+        </section>
+
+        <section class="mb-12">
+            <h2 class="text-2xl mb-4">9 · Changes</h2>
+            <p>
+                We may update this policy when our tooling or processors change. The current version is always available
+                at <a href="https://eightfold.work/privacy.html" class="legal-link">eightfold.work/privacy.html</a>.
+            </p>
+        </section>
+
+        <div class="rule mb-12"></div>
+
+        <p class="text-[color:var(--color-dim)] mono text-xs tracking-[0.14em] uppercase">
+            Last updated: April 2026
+        </p>
+    </main>
+
+    <footer class="border-t border-border">
+        <div class="max-w-[1000px] mx-auto px-8 py-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <p class="mono text-xs text-[color:var(--color-dim)] tracking-[0.14em] uppercase">
+                © 2026 EightFold · Leon Werner Schmidt (Einzelunternehmen)
+            </p>
+            <div class="flex gap-6 text-sm">
+                <a href="index.html" class="text-[color:var(--color-ink)] hover:text-[color:var(--color-accent)] transition-colors">Home</a>
+                <a href="imprint.html" class="text-[color:var(--color-ink)] hover:text-[color:var(--color-accent)] transition-colors">Imprint</a>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
