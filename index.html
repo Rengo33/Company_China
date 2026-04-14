@@ -102,30 +102,50 @@
         }
         .eyebrow .dot { color: var(--color-accent); padding: 0 0.4em; }
 
-        /* Bilingual layered headlines: both scripts always in DOM, one primary, one ghost
-           — swaps when language changes (html[lang] selectors) */
+        /* Bilingual layered headlines — both scripts always in DOM, stacked in a single
+           grid cell so they share a position model. On lang swap, CSS transitions
+           interpolate opacity + transform on BOTH layers simultaneously: the ghost rises
+           forward into primary, the primary recedes into the ghost slot. No blackout,
+           no JS class toggles — pure CSS choreography. */
         .bi {
+            display: inline-grid;
+            grid-template-areas: "stack";
             position: relative;
-            display: inline-block;
         }
         .bi > .en, .bi > .zh {
+            grid-area: stack;
             display: block;
-            transition: opacity 0.6s ease, transform 0.6s ease;
+            transform-origin: top left;
+            transition: opacity 0.7s cubic-bezier(.4,0,.2,1),
+                        transform 0.7s cubic-bezier(.4,0,.2,1);
+            will-change: opacity, transform;
         }
-        html[lang="en"] .bi > .zh,
-        html[lang="zh"] .bi > .en {
-            position: absolute;
-            inset: 0;
+
+        /* EN mode — Latin primary, Chinese ghost drifts down-right behind. */
+        html[lang="en"] .bi > .en {
+            opacity: 1;
+            transform: translate(0, 0) scale(1);
+            z-index: 1;
+        }
+        html[lang="en"] .bi > .zh {
             opacity: 0.07;
-            transform: translate(0.35em, 0.22em);
+            transform: translate(0.35em, 0.22em) scale(1);
             pointer-events: none;
             z-index: 0;
         }
-        html[lang="en"] .bi > .en,
+
+        /* ZH mode — Chinese primary, Latin ghost compressed behind. Scale + lower
+           opacity compensate for Latin's wider horizontal spread. */
         html[lang="zh"] .bi > .zh {
-            position: relative;
             opacity: 1;
+            transform: translate(0, 0) scale(1);
             z-index: 1;
+        }
+        html[lang="zh"] .bi > .en {
+            opacity: 0.05;
+            transform: translate(-0.05em, -0.18em) scale(0.78);
+            pointer-events: none;
+            z-index: 0;
         }
 
         /* Dual-script numerals 01 / 一 */
@@ -180,15 +200,22 @@
             #cursor-ring .glyph { opacity: 0; transition: opacity 0.2s ease; }
             #cursor-ring.show-glyph .glyph { opacity: 1; }
 
-            #cursor-ring.hover-external,
+            #cursor-ring.hover-external {
+                width: 46px; height: 46px; margin: -23px 0 0 -23px;
+                border-color: var(--color-ink);
+            }
             #cursor-ring.hover-internal {
-                width: 56px; height: 56px; margin: -28px 0 0 -28px;
+                width: 40px; height: 40px; margin: -20px 0 0 -20px;
+                border-color: var(--color-ink);
             }
             #cursor-ring.hover-button {
-                width: 64px; height: 64px; margin: -32px 0 0 -32px;
-                background: var(--color-accent);
+                width: 46px; height: 46px; margin: -23px 0 0 -23px;
+                border-color: var(--color-accent);
             }
-            #cursor-ring.hover-button .glyph { color: var(--color-void); }
+            /* Only external links get the glyph; internal/button stay clean */
+            #cursor-ring.hover-internal .glyph,
+            #cursor-ring.hover-button .glyph { opacity: 0 !important; }
+            #cursor-ring.hover-external .glyph { color: var(--color-ink); }
         }
         @media (hover: none), (pointer: coarse) {
             #cursor-dot, #cursor-ring { display: none !important; }
@@ -290,13 +317,31 @@
         .service-row .service-title .zh { transition: color 0.4s ease; }
         .service-tag {
             font-family: 'JetBrains Mono', monospace;
-            font-size: 0.7rem;
-            letter-spacing: 0.16em;
+            font-size: 0.68rem;
+            font-weight: 500;
+            letter-spacing: 0.22em;
             text-transform: uppercase;
             color: var(--color-dim);
-            padding: 0.32rem 0.7rem;
+            padding: 0.42rem 0.85rem 0.38rem;
             border: 1px solid var(--color-border);
-            border-radius: 999px;
+            border-radius: 0;
+            position: relative;
+            transition: color 0.3s ease, border-color 0.3s ease, background-color 0.3s ease;
+        }
+        .service-tag::before {
+            content: '·';
+            color: var(--color-stamp);
+            margin-right: 0.5em;
+            font-size: 1.1em;
+            line-height: 0;
+            position: relative;
+            top: -0.05em;
+        }
+        .service-row:hover .service-tag { border-color: var(--color-mute); }
+        .service-tag:hover {
+            color: var(--color-accent);
+            border-color: var(--color-accent);
+            background-color: rgba(200,255,0,0.03);
         }
 
         /* ——— Watermark characters (large atmospheric glyph) ——— */
@@ -312,12 +357,13 @@
             letter-spacing: 0;
         }
 
-        /* ——— Team asymmetric layout ——— */
+        /* ——— Team uniform grid ——— */
         .team-card { transition: transform 0.5s cubic-bezier(0.22,0.61,0.36,1); }
         .team-card:hover { transform: translateY(-4px); }
         .team-photo-wrap {
             position: relative;
             overflow: hidden;
+            aspect-ratio: 4/5;
             border: 1px solid var(--color-border);
             background: var(--color-surface);
             transition: border-color 0.5s ease;
@@ -349,13 +395,6 @@
         }
         .team-card:hover .team-tag-vertical { color: var(--color-accent); }
 
-        /* Featured card (Leon) — larger */
-        .team-featured .team-photo-wrap {
-            aspect-ratio: 4/5;
-        }
-        .team-standard .team-photo-wrap {
-            aspect-ratio: 1/1;
-        }
 
         /* ——— Principles triptych ——— */
         .principle-stamp {
@@ -369,7 +408,7 @@
                 0 1px 0 var(--color-stamp);
         }
 
-        /* ——— Selected work placeholder frames ——— */
+        /* ——— Selected work placeholder frames — blueprint + chop stamp ——— */
         .work-frame {
             position: relative;
             aspect-ratio: 4/3;
@@ -383,19 +422,54 @@
                     rgba(42,39,35,0.6) 23px
                 );
             transition: border-color 0.5s ease;
+            overflow: hidden;
+        }
+        /* Faint blueprint grid layered on top of the diagonal hatch */
+        .work-frame::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background-image:
+                linear-gradient(to right, rgba(213,203,186,0.04) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(213,203,186,0.04) 1px, transparent 1px);
+            background-size: 40px 40px;
+            opacity: 0.8;
+            transition: opacity 0.5s ease;
+        }
+        /* Chop stamp centered — "in progress" */
+        .work-frame::after {
+            content: '施工中';
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%) rotate(-8deg);
+            font-family: 'Noto Serif SC', serif;
+            font-weight: 900;
+            font-size: clamp(2.2rem, 4.2vw, 3.5rem);
+            letter-spacing: 0.18em;
+            color: var(--color-stamp);
+            opacity: 0.18;
+            border: 4px double var(--color-stamp);
+            padding: 0.35em 0.7em 0.25em;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+            white-space: nowrap;
         }
         .work-frame:hover { border-color: var(--color-accent); }
+        .work-frame:hover::before { opacity: 1; }
+        .work-frame:hover::after { opacity: 0.28; }
         .work-frame .badge {
             position: absolute;
             bottom: 1rem; left: 1rem;
-            padding: 0.3rem 0.7rem;
+            padding: 0.38rem 0.8rem;
             background: var(--color-void);
             border: 1px solid var(--color-border);
             font-family: 'JetBrains Mono', monospace;
-            font-size: 0.7rem;
-            letter-spacing: 0.18em;
+            font-size: 0.68rem;
+            letter-spacing: 0.2em;
             text-transform: uppercase;
             color: var(--color-dim);
+            z-index: 1;
         }
 
         /* ——— Language toggle ——— */
@@ -481,6 +555,18 @@
             opacity: 0.04;
             mix-blend-mode: overlay;
             background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.6 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+        }
+        /* Site-wide grain — extends the hero's texture across the whole page
+           at half the intensity so each section keeps a consistent material feel */
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.025;
+            mix-blend-mode: overlay;
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.55 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
         }
 
         /* Prevent FOUC during intro */
@@ -572,8 +658,9 @@
                  HERO — bilingual editorial
                  ══════════════════════════════════════════════════ -->
             <section class="framed grain relative pt-36 md:pt-44 pb-24 md:pb-32 overflow-hidden">
-                <!-- Atmospheric glyph -->
+                <!-- Atmospheric glyphs — paired for compositional balance -->
                 <div class="han-watermark" style="right: -2rem; bottom: -3rem; font-size: clamp(18rem, 34vw, 30rem);">八</div>
+                <div class="han-watermark" style="left: -1rem; top: 5rem; font-size: clamp(9rem, 14vw, 14rem); opacity: 0.025;">声</div>
                 <!-- Horizontal rule at top -->
                 <div class="absolute left-0 right-0 top-[96px]" style="border-top: 1px solid var(--color-border);"></div>
 
@@ -582,7 +669,7 @@
                     <div class="eyebrow flex items-center gap-4 mb-10 reveal-up">
                         <span>A Bilingual Brand Studio</span>
                         <span class="dot">·</span>
-                        <span>Wolfsburg ↔ Shanghai</span>
+                        <span>Lisbon ↔ Shanghai</span>
                         <span class="dot">·</span>
                         <span>EST. 2026</span>
                     </div>
@@ -665,7 +752,6 @@
                         <div class="md:col-span-2">
                             <div class="numeral reveal-up">
                                 <span class="text-accent">I</span>
-                                <span class="han">一</span>
                             </div>
                         </div>
                         <div class="md:col-span-7 service-title reveal-up">
@@ -693,7 +779,6 @@
                         <div class="md:col-span-2">
                             <div class="numeral reveal-up">
                                 <span class="text-accent">II</span>
-                                <span class="han">二</span>
                             </div>
                         </div>
                         <div class="md:col-span-7 service-title reveal-up">
@@ -721,7 +806,6 @@
                         <div class="md:col-span-2">
                             <div class="numeral reveal-up">
                                 <span class="text-accent">III</span>
-                                <span class="han">三</span>
                             </div>
                         </div>
                         <div class="md:col-span-7 service-title reveal-up">
@@ -759,21 +843,27 @@
                 </div>
                 <div class="marquee-container">
                     <div class="marquee-track">
-                        <a href="https://www.amazon.com"    target="_blank" rel="noopener noreferrer"><img src="logos/amazon.svg"   alt="Amazon"></a>
-                        <a href="https://www.audi.com"      target="_blank" rel="noopener noreferrer"><img src="logos/audi.svg"     alt="Audi"></a>
-                        <a href="https://www.sky.com"       target="_blank" rel="noopener noreferrer"><img src="logos/sky.svg"      alt="Sky"></a>
-                        <a href="https://www.lse.ac.uk"     target="_blank" rel="noopener noreferrer"><img src="logos/lse.svg"      alt="LSE"></a>
-                        <a href="https://www.novasbe.unl.pt"target="_blank" rel="noopener noreferrer"><img src="logos/nova-sbe.svg" alt="NOVA SBE"></a>
-                        <a href="https://www.amazon.com"    target="_blank" rel="noopener noreferrer"><img src="logos/amazon.svg"   alt="Amazon"></a>
-                        <a href="https://www.audi.com"      target="_blank" rel="noopener noreferrer"><img src="logos/audi.svg"     alt="Audi"></a>
-                        <a href="https://www.sky.com"       target="_blank" rel="noopener noreferrer"><img src="logos/sky.svg"      alt="Sky"></a>
-                        <a href="https://www.lse.ac.uk"     target="_blank" rel="noopener noreferrer"><img src="logos/lse.svg"      alt="LSE"></a>
-                        <a href="https://www.novasbe.unl.pt"target="_blank" rel="noopener noreferrer"><img src="logos/nova-sbe.svg" alt="NOVA SBE"></a>
-                        <a href="https://www.amazon.com"    target="_blank" rel="noopener noreferrer"><img src="logos/amazon.svg"   alt="Amazon"></a>
-                        <a href="https://www.audi.com"      target="_blank" rel="noopener noreferrer"><img src="logos/audi.svg"     alt="Audi"></a>
-                        <a href="https://www.sky.com"       target="_blank" rel="noopener noreferrer"><img src="logos/sky.svg"      alt="Sky"></a>
-                        <a href="https://www.lse.ac.uk"     target="_blank" rel="noopener noreferrer"><img src="logos/lse.svg"      alt="LSE"></a>
-                        <a href="https://www.novasbe.unl.pt"target="_blank" rel="noopener noreferrer"><img src="logos/nova-sbe.svg" alt="NOVA SBE"></a>
+                        <a href="https://www.amazon.com"                     target="_blank" rel="noopener noreferrer"><img src="logos/amazon.svg"         alt="Amazon"></a>
+                        <a href="https://www.audi.com"                       target="_blank" rel="noopener noreferrer"><img src="logos/audi.svg"           alt="Audi"></a>
+                        <a href="https://www.siemens.com"                    target="_blank" rel="noopener noreferrer"><img src="logos/siemens.svg"        alt="Siemens"></a>
+                        <a href="https://www.sky.com"                        target="_blank" rel="noopener noreferrer"><img src="logos/sky.svg"            alt="Sky"></a>
+                        <a href="https://www.fticonsulting.com"              target="_blank" rel="noopener noreferrer"><img src="logos/fti-consulting.svg" alt="FTI Consulting"></a>
+                        <a href="https://www.lse.ac.uk"                      target="_blank" rel="noopener noreferrer"><img src="logos/lse.svg"            alt="LSE"></a>
+                        <a href="https://www.novasbe.unl.pt"                 target="_blank" rel="noopener noreferrer"><img src="logos/nova-sbe.svg"       alt="NOVA SBE"></a>
+                        <a href="https://www.amazon.com"                     target="_blank" rel="noopener noreferrer"><img src="logos/amazon.svg"         alt="Amazon"></a>
+                        <a href="https://www.audi.com"                       target="_blank" rel="noopener noreferrer"><img src="logos/audi.svg"           alt="Audi"></a>
+                        <a href="https://www.siemens.com"                    target="_blank" rel="noopener noreferrer"><img src="logos/siemens.svg"        alt="Siemens"></a>
+                        <a href="https://www.sky.com"                        target="_blank" rel="noopener noreferrer"><img src="logos/sky.svg"            alt="Sky"></a>
+                        <a href="https://www.fticonsulting.com"              target="_blank" rel="noopener noreferrer"><img src="logos/fti-consulting.svg" alt="FTI Consulting"></a>
+                        <a href="https://www.lse.ac.uk"                      target="_blank" rel="noopener noreferrer"><img src="logos/lse.svg"            alt="LSE"></a>
+                        <a href="https://www.novasbe.unl.pt"                 target="_blank" rel="noopener noreferrer"><img src="logos/nova-sbe.svg"       alt="NOVA SBE"></a>
+                        <a href="https://www.amazon.com"                     target="_blank" rel="noopener noreferrer"><img src="logos/amazon.svg"         alt="Amazon"></a>
+                        <a href="https://www.audi.com"                       target="_blank" rel="noopener noreferrer"><img src="logos/audi.svg"           alt="Audi"></a>
+                        <a href="https://www.siemens.com"                    target="_blank" rel="noopener noreferrer"><img src="logos/siemens.svg"        alt="Siemens"></a>
+                        <a href="https://www.sky.com"                        target="_blank" rel="noopener noreferrer"><img src="logos/sky.svg"            alt="Sky"></a>
+                        <a href="https://www.fticonsulting.com"              target="_blank" rel="noopener noreferrer"><img src="logos/fti-consulting.svg" alt="FTI Consulting"></a>
+                        <a href="https://www.lse.ac.uk"                      target="_blank" rel="noopener noreferrer"><img src="logos/lse.svg"            alt="LSE"></a>
+                        <a href="https://www.novasbe.unl.pt"                 target="_blank" rel="noopener noreferrer"><img src="logos/nova-sbe.svg"       alt="NOVA SBE"></a>
                     </div>
                 </div>
             </section>
@@ -796,108 +886,101 @@
                         <div class="md:col-span-8 md:col-start-4">
                             <h2 class="display text-4xl md:text-6xl leading-[1.05]">
                                 <span class="bi">
-                                    <span class="en">Four founders.<br>Two continents.</span>
-                                    <span class="zh serif-han">四位创始人 ·<br>两块大陆。</span>
+                                    <span class="en">Four disciplines.<br>Two continents.</span>
+                                    <span class="zh serif-han">四项专长 ·<br>两块大陆。</span>
                                 </span>
                             </h2>
-                            <p class="mt-6 text-ink text-lg max-w-xl" data-i18n="team.subtitle">
-                                A studio of European market specialists with deep cross-cultural expertise, founded by four complementary minds united by a passion for bridging East and West.
+                            <p class="mt-6 text-ink text-lg max-w-xl reveal-up" data-i18n="team.subtitle">
+                                A studio of European market specialists with deep cross-cultural expertise — four complementary disciplines united by a passion for bridging East and West.
                             </p>
                         </div>
                     </div>
 
-                    <!-- Asymmetric grid — Leon featured on the left, others on the right -->
-                    <div class="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-8">
-                        <!-- Leon — featured (col-span-7 on desktop) -->
+                    <!-- Uniform 4-up portrait grid — all team members rendered identically -->
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
+                        <!-- Leon -->
                         <a href="https://www.linkedin.com/in/leon-werner-schmidt" target="_blank" rel="noopener"
-                           class="team-card team-featured block md:col-span-7 group">
-                            <div class="relative">
-                                <div class="team-photo-wrap">
-                                    <img src="images/team/leon.jpg" alt="Leon Werner Schmidt" class="team-photo">
-                                </div>
-                                <div class="team-tag-vertical absolute top-4 right-4">技术 · 本地化</div>
+                           class="team-card block group reveal-up">
+                            <div class="team-photo-wrap">
+                                <img src="images/team/leon.jpg" alt="Leon Werner Schmidt" class="team-photo">
+                                <div class="team-tag-vertical absolute top-3 right-3">技术</div>
                             </div>
-                            <div class="mt-6 flex items-start justify-between gap-4">
-                                <div>
-                                    <div class="mono text-xs text-dim tracking-[0.16em] uppercase mb-2">01 · Founder</div>
-                                    <h3 class="team-name display text-2xl md:text-3xl text-rice" data-i18n="team.member1Name">Leon Werner Schmidt</h3>
-                                    <p class="mt-2 text-ink" data-i18n="team.member1Role">Tech &amp; Localization</p>
+                            <div class="mt-5">
+                                <div class="mono text-[0.65rem] md:text-xs text-dim tracking-[0.18em] uppercase mb-2" data-i18n-html="team.member1Eyebrow">01 — Co-Founder</div>
+                                <div class="flex items-start justify-between gap-3">
+                                    <div>
+                                        <h3 class="team-name display text-lg md:text-xl text-rice" data-i18n="team.member1Name">Leon Werner Schmidt</h3>
+                                        <p class="mt-1 text-ink text-sm" data-i18n="team.member1Role">Technical Lead</p>
+                                    </div>
+                                    <svg class="h-[18px] w-[18px] text-dim group-hover:text-accent transition-colors flex-shrink-0 mt-0.5" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-label="LinkedIn">
+                                        <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                                    </svg>
                                 </div>
-                                <span class="mono text-xs text-dim group-hover:text-accent transition-colors flex-shrink-0">in ↗</span>
                             </div>
                         </a>
 
-                        <!-- Right column with 3 stacked -->
-                        <div class="md:col-span-5 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 gap-6 md:gap-8">
-                            <!-- Sarah -->
-                            <a href="https://www.linkedin.com/in/sarah-trojer-8944a4224/" target="_blank" rel="noopener"
-                               class="team-card team-standard block group">
-                                <div class="grid grid-cols-5 gap-4 items-stretch">
-                                    <div class="col-span-2 relative">
-                                        <div class="team-photo-wrap h-full">
-                                            <img src="images/team/sarah.jpg" alt="Sarah Tröger" class="team-photo">
-                                        </div>
+                        <!-- Sarah -->
+                        <a href="https://www.linkedin.com/in/sarah-trojer-8944a4224/" target="_blank" rel="noopener"
+                           class="team-card block group reveal-up">
+                            <div class="team-photo-wrap">
+                                <img src="images/team/sarah.jpg" alt="Sarah Tröger" class="team-photo">
+                                <div class="team-tag-vertical absolute top-3 right-3">品牌</div>
+                            </div>
+                            <div class="mt-5">
+                                <div class="mono text-[0.65rem] md:text-xs text-dim tracking-[0.18em] uppercase mb-2" data-i18n-html="team.member2Eyebrow">02 — Co-Founder</div>
+                                <div class="flex items-start justify-between gap-3">
+                                    <div>
+                                        <h3 class="team-name display text-lg md:text-xl text-rice" data-i18n="team.member2Name">Sarah Tröger</h3>
+                                        <p class="mt-1 text-ink text-sm" data-i18n="team.member2Role">Brand &amp; Design</p>
                                     </div>
-                                    <div class="col-span-3 flex flex-col justify-between py-1">
-                                        <div>
-                                            <div class="mono text-xs text-dim tracking-[0.16em] uppercase mb-1">02 · Founder</div>
-                                            <h3 class="team-name display text-xl text-rice" data-i18n="team.member2Name">Sarah Tröger</h3>
-                                            <p class="mt-1 text-ink text-sm" data-i18n="team.member2Role">Brand &amp; Design</p>
-                                        </div>
-                                        <div class="flex items-center justify-between">
-                                            <span class="serif-han text-dim text-sm tracking-widest">品牌</span>
-                                            <span class="mono text-xs text-dim group-hover:text-accent transition-colors">in ↗</span>
-                                        </div>
-                                    </div>
+                                    <svg class="h-[18px] w-[18px] text-dim group-hover:text-accent transition-colors flex-shrink-0 mt-0.5" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-label="LinkedIn">
+                                        <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                                    </svg>
                                 </div>
-                            </a>
+                            </div>
+                        </a>
 
-                            <!-- Tim -->
-                            <a href="https://www.linkedin.com/in/timkeunecke" target="_blank" rel="noopener"
-                               class="team-card team-standard block group">
-                                <div class="grid grid-cols-5 gap-4 items-stretch">
-                                    <div class="col-span-2 relative">
-                                        <div class="team-photo-wrap h-full">
-                                            <img src="images/team/tim.jpg" alt="Tim Keunecke" class="team-photo">
-                                        </div>
+                        <!-- Tim -->
+                        <a href="https://www.linkedin.com/in/timkeunecke" target="_blank" rel="noopener"
+                           class="team-card block group reveal-up">
+                            <div class="team-photo-wrap">
+                                <img src="images/team/tim.jpg" alt="Tim Keunecke" class="team-photo">
+                                <div class="team-tag-vertical absolute top-3 right-3">增长</div>
+                            </div>
+                            <div class="mt-5">
+                                <div class="mono text-[0.65rem] md:text-xs text-dim tracking-[0.18em] uppercase mb-2" data-i18n-html="team.member3Eyebrow">03 — Co-Founder</div>
+                                <div class="flex items-start justify-between gap-3">
+                                    <div>
+                                        <h3 class="team-name display text-lg md:text-xl text-rice" data-i18n="team.member3Name">Tim Keunecke</h3>
+                                        <p class="mt-1 text-ink text-sm" data-i18n="team.member3Role">B2B Growth</p>
                                     </div>
-                                    <div class="col-span-3 flex flex-col justify-between py-1">
-                                        <div>
-                                            <div class="mono text-xs text-dim tracking-[0.16em] uppercase mb-1">03 · Founder</div>
-                                            <h3 class="team-name display text-xl text-rice" data-i18n="team.member3Name">Tim Keunecke</h3>
-                                            <p class="mt-1 text-ink text-sm" data-i18n="team.member3Role">B2B Growth</p>
-                                        </div>
-                                        <div class="flex items-center justify-between">
-                                            <span class="serif-han text-dim text-sm tracking-widest">增长</span>
-                                            <span class="mono text-xs text-dim group-hover:text-accent transition-colors">in ↗</span>
-                                        </div>
-                                    </div>
+                                    <svg class="h-[18px] w-[18px] text-dim group-hover:text-accent transition-colors flex-shrink-0 mt-0.5" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-label="LinkedIn">
+                                        <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                                    </svg>
                                 </div>
-                            </a>
+                            </div>
+                        </a>
 
-                            <!-- Jonas -->
-                            <a href="https://www.linkedin.com/in/jonas-felix-gruhler" target="_blank" rel="noopener"
-                               class="team-card team-standard block group">
-                                <div class="grid grid-cols-5 gap-4 items-stretch">
-                                    <div class="col-span-2 relative">
-                                        <div class="team-photo-wrap h-full">
-                                            <img src="images/team/jonas.jpg" alt="Jonas Gruhler" class="team-photo">
-                                        </div>
+                        <!-- Jonas -->
+                        <a href="https://www.linkedin.com/in/jonas-felix-gruhler" target="_blank" rel="noopener"
+                           class="team-card block group reveal-up">
+                            <div class="team-photo-wrap">
+                                <img src="images/team/jonas.jpg" alt="Jonas Gruhler" class="team-photo">
+                                <div class="team-tag-vertical absolute top-3 right-3">运营</div>
+                            </div>
+                            <div class="mt-5">
+                                <div class="mono text-[0.65rem] md:text-xs text-dim tracking-[0.18em] uppercase mb-2" data-i18n-html="team.member4Eyebrow">04 — Co-Founder</div>
+                                <div class="flex items-start justify-between gap-3">
+                                    <div>
+                                        <h3 class="team-name display text-lg md:text-xl text-rice" data-i18n="team.member4Name">Jonas Gruhler</h3>
+                                        <p class="mt-1 text-ink text-sm" data-i18n="team.member4Role">China Operations</p>
                                     </div>
-                                    <div class="col-span-3 flex flex-col justify-between py-1">
-                                        <div>
-                                            <div class="mono text-xs text-dim tracking-[0.16em] uppercase mb-1">04 · Founder</div>
-                                            <h3 class="team-name display text-xl text-rice" data-i18n="team.member4Name">Jonas Gruhler</h3>
-                                            <p class="mt-1 text-ink text-sm" data-i18n="team.member4Role">China Operations</p>
-                                        </div>
-                                        <div class="flex items-center justify-between">
-                                            <span class="serif-han text-dim text-sm tracking-widest">运营</span>
-                                            <span class="mono text-xs text-dim group-hover:text-accent transition-colors">in ↗</span>
-                                        </div>
-                                    </div>
+                                    <svg class="h-[18px] w-[18px] text-dim group-hover:text-accent transition-colors flex-shrink-0 mt-0.5" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-label="LinkedIn">
+                                        <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                                    </svg>
                                 </div>
-                            </a>
-                        </div>
+                            </div>
+                        </a>
                     </div>
                 </div>
             </section>
@@ -969,7 +1052,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-16">
                         <div class="reveal-up">
                             <div class="principle-stamp mb-6">真</div>
-                            <div class="mono text-xs text-accent tracking-[0.22em] uppercase mb-3">01 · Authenticity</div>
+                            <div class="mono text-xs text-accent tracking-[0.22em] uppercase mb-3"><span class="serif-han">真</span> · Authenticity</div>
                             <h3 class="display text-xl md:text-2xl text-rice mb-3" data-i18n="principles.one.title">One voice, two scripts.</h3>
                             <p class="text-ink leading-relaxed" data-i18n="principles.one.body">
                                 We write for both audiences from the start. What you say in Shanghai and what lands in Stuttgart should sound like the same company — and mean the same thing.
@@ -977,7 +1060,7 @@
                         </div>
                         <div class="reveal-up">
                             <div class="principle-stamp mb-6">桥</div>
-                            <div class="mono text-xs text-accent tracking-[0.22em] uppercase mb-3">02 · Bridge</div>
+                            <div class="mono text-xs text-accent tracking-[0.22em] uppercase mb-3"><span class="serif-han">桥</span> · Bridge</div>
                             <h3 class="display text-xl md:text-2xl text-rice mb-3" data-i18n="principles.two.title">Relationships, not translations.</h3>
                             <p class="text-ink leading-relaxed" data-i18n="principles.two.body">
                                 A website is not a translation layer. LinkedIn is not a brochure. We build the connective tissue — the ongoing relationship between your brand and the market it wants to serve.
@@ -985,7 +1068,7 @@
                         </div>
                         <div class="reveal-up">
                             <div class="principle-stamp mb-6">心</div>
-                            <div class="mono text-xs text-accent tracking-[0.22em] uppercase mb-3">03 · Care</div>
+                            <div class="mono text-xs text-accent tracking-[0.22em] uppercase mb-3"><span class="serif-han">心</span> · Care</div>
                             <h3 class="display text-xl md:text-2xl text-rice mb-3" data-i18n="principles.three.title">Every nuance honored.</h3>
                             <p class="text-ink leading-relaxed" data-i18n="principles.three.body">
                                 Typography, tone, legal small-print, the curve of a headline — details that feel invisible until they're wrong. We don't ship anything we wouldn't be proud to sign.
@@ -1037,22 +1120,22 @@
                             </div>
                         </div>
 
-                        <!-- Contact details -->
-                        <div class="md:col-span-7 grid grid-cols-1 sm:grid-cols-3 gap-8">
-                            <div>
+                        <!-- Contact details — 12-col subgrid, all three data points at matching weight -->
+                        <div class="md:col-span-7 grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-6">
+                            <div class="md:col-span-5 min-w-0">
                                 <div class="eyebrow mb-3">Email</div>
-                                <a href="mailto:info@eightfold.work" class="block text-rice display text-lg hover:text-accent transition-colors">
+                                <a href="mailto:info@eightfold.work" class="block text-rice mono text-base hover:text-accent transition-colors break-all">
                                     info@eightfold.work
                                 </a>
                             </div>
-                            <div>
+                            <div class="md:col-span-4 min-w-0">
                                 <div class="eyebrow mb-3">Location · 位置</div>
-                                <div class="text-rice display text-lg">Wolfsburg, DE</div>
-                                <div class="text-dim text-sm mt-1 serif-han">沃尔夫斯堡 · 德国</div>
+                                <div class="text-rice display text-sm md:text-[0.95rem] whitespace-nowrap">Lisbon ↔ Shanghai</div>
+                                <div class="text-dim text-sm mt-1 serif-han">里斯本 ↔ 上海</div>
                             </div>
-                            <div>
+                            <div class="md:col-span-3 min-w-0">
                                 <div class="eyebrow mb-3">WeChat · 微信</div>
-                                <button onclick="copyWeChat()" class="text-rice display text-lg hover:text-accent transition-colors inline-flex items-center gap-2 group">
+                                <button onclick="copyWeChat()" class="text-rice display text-base hover:text-accent transition-colors inline-flex items-center gap-2 group">
                                     rengo33
                                     <span class="text-dim group-hover:text-accent transition-colors">⎘</span>
                                 </button>
@@ -1081,7 +1164,7 @@
                             <span class="serif-han text-sm text-dim">八重</span>
                         </a>
                         <p class="mt-6 text-ink max-w-sm leading-relaxed" data-i18n="footer.mission">
-                            A bilingual brand studio helping innovative Chinese companies earn credibility in Europe. Wolfsburg-based, working across the continents.
+                            A bilingual brand studio helping innovative Chinese companies earn credibility in Europe. Based between Lisbon and Shanghai, where we first met.
                         </p>
                     </div>
 
@@ -1100,15 +1183,15 @@
                         <ul class="space-y-3 text-ink">
                             <li><a href="mailto:info@eightfold.work" class="hover:text-accent transition-colors">info@eightfold.work</a></li>
                             <li><button onclick="copyWeChat()" class="hover:text-accent transition-colors">WeChat: rengo33</button></li>
-                            <li class="text-dim text-sm">Wolfsburg, Germany</li>
+                            <li class="text-dim text-sm">Lisbon · Shanghai</li>
                         </ul>
                     </div>
 
                     <div class="md:col-span-3">
                         <h3 class="eyebrow mb-5" data-i18n="footer.legalHeading">Legal</h3>
                         <ul class="space-y-3 text-ink">
-                            <li><a href="imprint.html"  class="hover:text-accent transition-colors" data-i18n="footer.imprint">Imprint · Impressum</a></li>
-                            <li><a href="privacy.html"  class="hover:text-accent transition-colors" data-i18n="footer.privacyPolicy">Privacy · Datenschutz</a></li>
+                            <li><a href="imprint.html"  class="hover:text-accent transition-colors" data-i18n="footer.imprint">Imprint</a></li>
+                            <li><a href="privacy.html"  class="hover:text-accent transition-colors" data-i18n="footer.privacyPolicy">Privacy</a></li>
                         </ul>
                     </div>
                 </div>
@@ -1119,7 +1202,7 @@
                             © 2026 EightFold · Leon Werner Schmidt (Einzelunternehmen) · All rights reserved
                         </p>
                         <p class="mono text-[0.65rem] text-mute tracking-[0.2em] uppercase mt-2">
-                            Made between Wolfsburg &amp; Shanghai · 沃尔夫斯堡 ⇄ 上海
+                            Made between Lisbon &amp; Shanghai · 里斯本 ↔ 上海
                         </p>
                     </div>
                     <div class="flex items-center space-x-5">
@@ -1160,13 +1243,17 @@
                 'expertise.heading': 'Team Experience From',
                 'expertise.sub':     'Alumni, prior roles & partnerships',
 
-                'team.subtitle': 'A studio of European market specialists with deep cross-cultural expertise, founded by four complementary minds united by a passion for bridging East and West.',
+                'team.subtitle': 'A studio of European market specialists with deep cross-cultural expertise — four complementary disciplines united by a passion for bridging East and West.',
+                'team.member1Eyebrow': '01 — Co-Founder',
                 'team.member1Name': 'Leon Werner Schmidt',
-                'team.member1Role': 'Tech & Localization',
+                'team.member1Role': 'Technical Lead',
+                'team.member2Eyebrow': '02 — Co-Founder',
                 'team.member2Name': 'Sarah Tröger',
                 'team.member2Role': 'Brand & Design',
+                'team.member3Eyebrow': '03 — Co-Founder',
                 'team.member3Name': 'Tim Keunecke',
                 'team.member3Role': 'B2B Growth',
+                'team.member4Eyebrow': '04 — Co-Founder',
                 'team.member4Name': 'Jonas Gruhler',
                 'team.member4Role': 'China Operations',
 
@@ -1184,12 +1271,12 @@
                 'contact.cta':     'Schedule a free call',
                 'contact.ctaSub':  '30 minutes · No obligation · 30分钟 · 无义务',
 
-                'footer.mission': 'A bilingual brand studio helping innovative Chinese companies earn credibility in Europe. Wolfsburg-based, working across the continents.',
+                'footer.mission': 'A bilingual brand studio helping innovative Chinese companies earn credibility in Europe. Based between Lisbon and Shanghai, where we first met.',
                 'footer.nav':             'Navigate',
                 'footer.contactHeading':  'Contact',
                 'footer.legalHeading':    'Legal',
-                'footer.imprint':         'Imprint · Impressum',
-                'footer.privacyPolicy':   'Privacy · Datenschutz',
+                'footer.imprint':         'Imprint',
+                'footer.privacyPolicy':   'Privacy',
                 'footer.copyright':       '© 2026 EightFold · Leon Werner Schmidt (Einzelunternehmen) · All rights reserved',
             },
             zh: {
@@ -1211,13 +1298,17 @@
                 'expertise.heading': '团队履历源自',
                 'expertise.sub':     '校友、过往职位与合作经历',
 
-                'team.subtitle': '一支拥有深厚跨文化专业知识的欧洲市场专家团队，由四位互补的创始人组成，共同致力于连接东方与西方。',
+                'team.subtitle': '一支拥有深厚跨文化专业知识的欧洲市场专家团队——四种互补的专业力量，共同致力于连接东方与西方。',
+                'team.member1Eyebrow': '01 · 联合创始人',
                 'team.member1Name': 'Leon Werner Schmidt',
-                'team.member1Role': '技术与本地化',
+                'team.member1Role': '技术主理',
+                'team.member2Eyebrow': '02 · 联合创始人',
                 'team.member2Name': 'Sarah Tröger',
                 'team.member2Role': '品牌与设计',
+                'team.member3Eyebrow': '03 · 联合创始人',
                 'team.member3Name': 'Tim Keunecke',
                 'team.member3Role': 'B2B 增长',
+                'team.member4Eyebrow': '04 · 联合创始人',
                 'team.member4Name': 'Jonas Gruhler',
                 'team.member4Role': '中国业务',
 
@@ -1235,12 +1326,12 @@
                 'contact.cta':     '预约免费通话',
                 'contact.ctaSub':  '30 分钟 · 无义务 · 30 minutes · No obligation',
 
-                'footer.mission': '助力中国创新企业在欧洲赢得信任的双语品牌工作室。总部沃尔夫斯堡，工作跨越两大洲。',
+                'footer.mission': '助力中国创新企业在欧洲赢得信任的双语品牌工作室。工作基地位于里斯本与上海——我们相识之地。',
                 'footer.nav':             '导航',
                 'footer.contactHeading':  '联系',
                 'footer.legalHeading':    '法律',
-                'footer.imprint':         '法律声明 · Imprint',
-                'footer.privacyPolicy':   '隐私政策 · Datenschutz',
+                'footer.imprint':         '法律声明',
+                'footer.privacyPolicy':   '隐私政策',
                 'footer.copyright':       '© 2026 EightFold · Leon Werner Schmidt（个人独资） · 保留所有权利',
             }
         };
@@ -1255,8 +1346,13 @@
             });
         }
 
-        function setLang(lang) {
-            document.documentElement.lang = lang;
+        function setLang(lang, animate = true) {
+            const root = document.documentElement;
+            if (animate && root.lang === lang) return;
+
+            // The bilingual .bi layers crossfade themselves via CSS transitions on
+            // the html[lang=""] selectors — swap is instant here, motion is automatic.
+            root.lang = lang;
             localStorage.setItem('ef_lang', lang);
 
             document.querySelectorAll('[data-i18n]').forEach(el => {
@@ -1300,8 +1396,11 @@
 
         const introOverlay  = document.getElementById('intro-overlay');
         const introPath     = document.getElementById('intro-eight-path');
-        // Gate intro on localStorage (once ever) instead of sessionStorage (once per session)
-        const skipIntro = localStorage.getItem('ef_intro_done');
+        // Gate intro on localStorage — replay after 30 days so returning visitors
+        // eventually see the opening beat again without it nagging every session.
+        const introStamp  = parseInt(localStorage.getItem('ef_intro_done') || '0', 10);
+        const THIRTY_DAYS = 30 * 24 * 60 * 60 * 1000;
+        const skipIntro   = introStamp && (Date.now() - introStamp) < THIRTY_DAYS;
 
         function unlockScroll() {
             document.body.classList.remove('intro-locked');
@@ -1324,7 +1423,7 @@
         }
 
         function startTransition() {
-            localStorage.setItem('ef_intro_done', '1');
+            localStorage.setItem('ef_intro_done', Date.now().toString());
             unlockScroll();
 
             const heroEightDiv = document.getElementById('hero-eight');
