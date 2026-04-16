@@ -36,6 +36,7 @@ console = Console()
 # ── Source Registry ──
 # Each entry: (display_name, module_path, async_function_name, default_kwargs)
 SOURCE_REGISTRY = {
+    "alibaba": ("Alibaba.com", "scraping.sources.alibaba", "scrape_alibaba_suppliers", {}),
     "amazon-de": ("Amazon Germany", "scraping.sources.amazon_eu", "scrape_amazon_sellers", {"marketplace": "de"}),
     "amazon-uk": ("Amazon UK", "scraping.sources.amazon_eu", "scrape_amazon_sellers", {"marketplace": "uk"}),
     "amazon-fr": ("Amazon France", "scraping.sources.amazon_eu", "scrape_amazon_sellers", {"marketplace": "fr"}),
@@ -47,10 +48,10 @@ SOURCE_REGISTRY = {
 
 # ── Modes ──
 MODES = {
-    "dtc": ["amazon-de", "amazon-uk", "amazon-fr"],
+    "dtc": ["alibaba", "amazon-de", "amazon-uk", "amazon-fr"],
     "ads": ["facebook-ads"],
     "registry": ["companies-house"],
-    "b2b": ["made-in-china", "canton-fair"],
+    "b2b": ["alibaba", "made-in-china", "canton-fair"],
     "all": list(SOURCE_REGISTRY.keys()),
 }
 
