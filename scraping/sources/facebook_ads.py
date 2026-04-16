@@ -298,14 +298,30 @@ def _looks_chinese_brand(name: str, website: str = "") -> bool:
     if any(suf in name_lower for suf in cn_suffixes):
         return True
 
-    # Pinyin syllable detection (requires at least 2 to reduce false positives)
+    # Pinyin syllable detection: 2+ syllables OR 1 distinctive syllable in short name
     name_tokens = re.findall(r"[a-z]+", name_lower)
     pinyin_hits = sum(1 for t in name_tokens if t in PINYIN_SYLLABLES)
     if pinyin_hits >= 2:
         return True
+    # Short name (<= 2 tokens) with 1 distinctive pinyin syllable
+    if len(name_tokens) <= 2 and pinyin_hits >= 1:
+        return True
+    # Check within the name string for common pinyin openers
+    distinctive_openers = ("xiao", "hua", "zhong", "shen", "guang", "dong", "bei")
+    if any(name_lower.startswith(op) for op in distinctive_openers):
+        return True
 
     # Single-word all-caps brand (UGREEN, BASEUS, TOZO pattern)
-    if re.match(r"^[A-Z]{4,10}$", name.strip()) and " " not in name:
+    stripped = name.strip()
+    if re.match(r"^[A-Z]{4,10}$", stripped) and " " not in stripped:
+        return True
+
+    # CamelCase branding that contains a known CN brand token
+    # e.g. "BaseusGlobal", "XiaomiEU", "AnkerDirect"
+    known_cn_brands = ("baseus", "xiaomi", "ugreen", "anker", "huawei",
+                        "lenovo", "oppo", "vivo", "tozo", "tcl",
+                        "hikvision", "dji", "ecoflow", "bluetti", "govee")
+    if any(brand in name_lower for brand in known_cn_brands):
         return True
 
     return False

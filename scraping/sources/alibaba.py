@@ -142,10 +142,8 @@ async def scrape_alibaba_suppliers(
         try:
             page = context.pages[0] if context.pages else await context.new_page()
             page_num = 1
-
-            # Pre-warm session: visit homepage first so search looks natural
-            console.print("[dim]Pre-warming session...[/dim]")
-            await _prewarm_session(page)
+            # Note: pre-warming (homepage visit) tends to trigger CAPTCHA more
+            # than going direct to search with a saved session. Skipped by default.
 
             with Progress() as progress:
                 task = progress.add_task(f"Scraping Alibaba ({cat_slug})...", total=limit)
@@ -228,8 +226,24 @@ async def _wait_for_captcha(page, content: str = "") -> bool:
     if not content:
         content = await page.content()
 
-    captcha_signals = ["Captcha", "slide to verify", "Slide to verify", "unusual traffic"]
-    is_captcha = any(s.lower() in content.lower() for s in captcha_signals)
+    # Check page title first — CAPTCHAs typically change the title
+    try:
+        title = await page.title()
+    except Exception:
+        title = ""
+
+    # Strong signals: title or visible blocking text (not random JS mentions)
+    title_lower = title.lower()
+    title_signals = ["captcha", "verify", "unusual traffic", "security check"]
+
+    # Check body's first 2000 chars (where actual block message appears)
+    body_head = content[:3000].lower() if content else ""
+    body_signals = ["please slide to verify", "slide to verify", "unusual traffic from your network"]
+
+    is_captcha = (
+        any(s in title_lower for s in title_signals)
+        or any(s in body_head for s in body_signals)
+    )
 
     if not is_captcha:
         return False

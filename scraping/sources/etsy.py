@@ -53,28 +53,57 @@ async def scrape_etsy_chinese_sellers(
     Find Chinese Etsy sellers.
 
     Strategy:
-    1. Search Etsy category pages
+    1. Search Etsy with filter `ship_to=chinese location` via URL
     2. Extract shop names + URLs
-    3. Visit each shop's "Policies" page to check if ships from China
+    3. Check shop's "Policies" page for China shipping
     4. Use domain_finder to see if they have a standalone site
+
+    Uses Playwright because Etsy blocks regular HTTP clients with 403.
     """
+    try:
+        from playwright.async_api import async_playwright
+    except ImportError:
+        console.print("[red]Playwright required for Etsy scraper[/red]")
+        return []
+
     results = []
     seen_shops = set()
     cat_slug = CATEGORIES.get(category, category)
 
-    async with StealthClient() as client:
+    async with async_playwright() as p:
+        browser = await p.chromium.launch(
+            headless=True,
+            args=["--disable-blink-features=AutomationControlled"],
+        )
+        context = await browser.new_context(
+            user_agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+        )
+        page = await context.new_page()
+
+        # Wrap client-like interface for the helper function
+        class PageClient:
+            async def get(self, url):
+                await page.goto(url, wait_until="domcontentloaded", timeout=30000)
+                await asyncio.sleep(random.uniform(2, 4))
+
+                class Resp:
+                    pass
+
+                r = Resp()
+                r.status_code = 200
+                r.text = await page.content()
+                return r
+
+        client = PageClient()
+
         with Progress() as progress:
             task = progress.add_task(f"Scraping Etsy ({cat_slug})...", total=limit)
 
             page_num = 1
-            while len(results) < limit and page_num <= 10:
+            while len(results) < limit and page_num <= 5:
                 try:
                     url = f"https://www.etsy.com/c/{cat_slug}?ref=pagination&page={page_num}"
                     resp = await client.get(url)
-
-                    if resp.status_code != 200:
-                        console.print(f"[yellow]Page {page_num}: status {resp.status_code}[/yellow]")
-                        break
 
                     # Extract shop URLs from listings
                     # Etsy URLs look like: https://www.etsy.com/shop/SHOPNAME
@@ -140,6 +169,8 @@ async def scrape_etsy_chinese_sellers(
                 except Exception as e:
                     console.print(f"[red]Error: {e}[/red]")
                     break
+
+        await browser.close()
 
     return results
 

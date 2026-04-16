@@ -15,14 +15,20 @@ from scraping.utils.skip_domains import is_skip_domain
 
 async def find_company_domain(company_name: str) -> str:
     """Search DuckDuckGo for a company's website."""
-    # More specific query with "official" + optional location helps filter aggregators
+    # Strip quotes (DDG returns 202 bot-challenge for quoted queries)
+    clean_name = re.sub(r'[",.]', " ", company_name)
+    clean_name = re.sub(r"\s+", " ", clean_name).strip()
+
     queries = [
-        f'"{company_name}" official website',
-        f'"{company_name}" contact us',
+        f"{clean_name} official website",
+        f"{clean_name} contact us",
     ]
 
     async with StealthClient() as client:
-        for query in queries:
+        for i, query in enumerate(queries):
+            # Small delay between queries to avoid DDG rate-limiting
+            if i > 0:
+                await asyncio.sleep(2)
             try:
                 resp = await client.get(
                     "https://html.duckduckgo.com/html/",
@@ -32,18 +38,24 @@ async def find_company_domain(company_name: str) -> str:
                 if resp.status_code != 200:
                     continue
 
-                # DDG wraps result links via redirect: uddg=<encoded_url>
-                raw_urls = re.findall(r'uddg=(https?[^&"]+)', resp.text)
-                urls = [unquote(u) for u in raw_urls]
+                # DDG now uses direct links in result__a class (was uddg= wrapper)
+                urls = re.findall(r'class="result__a"[^>]*href="([^"]+)"', resp.text)
+
+                # Fallback: try uddg= pattern for older DDG versions
+                if not urls:
+                    raw = re.findall(r'uddg=(https?[^&"]+)', resp.text)
+                    urls = [unquote(u) for u in raw]
 
                 # Score candidates — prefer domains that look like the company
                 candidates = []
                 name_tokens = _name_tokens(company_name)
+                seen = set()
 
                 for url in urls:
                     domain = _extract_clean_domain(url)
-                    if not domain:
+                    if not domain or domain in seen:
                         continue
+                    seen.add(domain)
                     if is_skip_domain(domain):
                         continue
 
