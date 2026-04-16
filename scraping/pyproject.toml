@@ -1,0 +1,45 @@
+[project]
+name = "eightfold-leads"
+version = "0.1.0"
+description = "Lead generation pipeline for EightFold — find Chinese companies needing better EU web presence"
+requires-python = ">=3.11"
+dependencies = [
+    # Scraping
+    "playwright>=1.42",
+    "httpx>=0.27",
+    "curl-cffi>=0.7",           # TLS fingerprint impersonation (bypass bot detection)
+    "selectolax>=0.3",
+
+    # Database
+    "sqlmodel>=0.0.16",
+
+    # Assessment
+    "langdetect>=1.0.9",
+    "language-tool-python>=2.8",
+
+    # Contact extraction
+    "python-whois>=0.9",
+    "email-validator>=2.1",
+    "dnspython>=2.6",
+
+    # Chinese text
+    "pypinyin>=0.51",
+
+    # Pipeline
+    "tenacity>=8.2",
+    "pydantic>=2.6",
+    "pydantic-settings>=2.2",
+
+    # Export
+    "openpyxl>=3.1",
+
+    # CLI
+    "rich>=13.7",
+    "click>=8.1",
+]
+
+[project.optional-dependencies]
+wechat = [
+    "pyzbar>=0.1.9",
+    "opencv-python-headless>=4.9",
+]
