@@ -41,6 +41,9 @@ SOURCE_REGISTRY = {
     "amazon-uk": ("Amazon UK", "scraping.sources.amazon_eu", "scrape_amazon_sellers", {"marketplace": "uk"}),
     "amazon-fr": ("Amazon France", "scraping.sources.amazon_eu", "scrape_amazon_sellers", {"marketplace": "fr"}),
     "facebook-ads": ("Facebook Ad Library", "scraping.sources.facebook_ads", "search_fb_ad_library", {}),
+    "etsy": ("Etsy Chinese Sellers", "scraping.sources.etsy", "scrape_etsy_chinese_sellers", {}),
+    "kickstarter": ("Kickstarter", "scraping.sources.kickstarter", "scrape_kickstarter", {}),
+    "impressum": ("German Impressum", "scraping.sources.impressum", "scrape_impressum_domains", {}),
     "made-in-china": ("Made-in-China.com", "scraping.sources.alibaba_sellers", "scrape_all_categories", {}),
     "canton-fair": ("Canton Fair", "scraping.sources.trade_shows", "scrape_canton_fair", {}),
     "companies-house": ("Companies House UK", "scraping.sources.company_registries", "search_chinese_companies", {}),
@@ -48,10 +51,12 @@ SOURCE_REGISTRY = {
 
 # ── Modes ──
 MODES = {
-    "dtc": ["alibaba", "amazon-de", "amazon-uk", "amazon-fr"],
+    "dtc": ["amazon-de", "amazon-uk", "amazon-fr", "etsy"],
     "ads": ["facebook-ads"],
-    "registry": ["companies-house"],
+    "registry": ["companies-house", "impressum"],
     "b2b": ["alibaba", "made-in-china", "canton-fair"],
+    "startups": ["kickstarter"],
+    "lowkey": ["etsy", "kickstarter", "facebook-ads", "impressum"],
     "all": list(SOURCE_REGISTRY.keys()),
 }
 

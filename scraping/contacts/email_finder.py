@@ -23,6 +23,7 @@ from scraping.config.settings import settings
 from scraping.db.init_db import get_engine
 from scraping.db.models import Company, Contact
 from scraping.utils.http import StealthClient
+from scraping.utils.skip_domains import is_skip_email, is_skip_domain
 
 console = Console()
 
@@ -39,20 +40,7 @@ CONTACT_PATHS = [
     "/",  # homepage as fallback
 ]
 
-# Email addresses to skip (generic/useless)
-SKIP_EMAILS = {
-    "noreply@", "no-reply@", "mailer-daemon@", "postmaster@",
-    "webmaster@", "admin@example", "test@", "user@",
-    "sentry@", "privacy@", "abuse@",
-}
-
-# Domains to skip (not company emails)
-SKIP_DOMAINS = {
-    "gmail.com", "yahoo.com", "hotmail.com", "outlook.com",
-    "example.com", "test.com", "sentry.io", "googleapis.com",
-    "w3.org", "schema.org", "facebook.com", "twitter.com",
-    "instagram.com", "linkedin.com",
-}
+# (Skip logic moved to scraping/utils/skip_domains.py — is_skip_email())
 
 
 async def find_emails_on_website(domain: str) -> list[str]:
@@ -96,7 +84,7 @@ async def find_emails_on_website(domain: str) -> list[str]:
 
 
 async def find_email_whois(domain: str) -> Optional[str]:
-    """Try to get registrant email from WHOIS data."""
+    """Try to get registrant email from WHOIS data. Rejects hosting/privacy emails."""
     try:
         import whois
         w = whois.whois(domain)
@@ -105,8 +93,16 @@ async def find_email_whois(domain: str) -> Optional[str]:
             emails = [emails]
         if emails:
             for email in emails:
-                if _is_valid_email(email) and "privacy" not in email.lower():
-                    return email.lower()
+                email = email.lower().strip()
+                if not _is_valid_email(email):
+                    continue
+                # Prefer emails that match the company's domain
+                email_domain = email.rsplit("@", 1)[-1]
+                if email_domain == domain or email_domain.endswith("." + domain):
+                    return email
+                # Only return non-matching WHOIS email as last resort
+                # (often these are hosting provider emails, not useful)
+        return None
     except Exception:
         pass
     return None
@@ -147,16 +143,11 @@ def guess_email_patterns(domain: str, name: str = "") -> list[str]:
     return patterns
 
 
-def _is_valid_email(email: str) -> bool:
-    """Filter out junk emails."""
-    email = email.lower()
+def _is_valid_email(email: str, company_domain: str = "") -> bool:
+    """Filter out junk emails. If company_domain is given, be stricter."""
+    email = email.lower().strip()
 
-    for skip in SKIP_EMAILS:
-        if skip in email:
-            return False
-
-    domain = email.split("@")[-1] if "@" in email else ""
-    if domain in SKIP_DOMAINS:
+    if is_skip_email(email):
         return False
 
     # Must have valid TLD

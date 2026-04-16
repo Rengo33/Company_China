@@ -114,6 +114,10 @@ async def scrape_contact_pages_batch(profile_urls: list[str], delay: float = 2.0
                         results.append(MICContact())
                         break
 
+                    # Try to click email reveal button (MIC often hides email)
+                    await _try_reveal_email(page)
+                    text = await page.inner_text("body")
+
                     contact = _parse_contact_text(text)
                     results.append(contact)
 
@@ -124,6 +128,27 @@ async def scrape_contact_pages_batch(profile_urls: list[str], delay: float = 2.0
             await context.close()
 
     return results
+
+
+async def _try_reveal_email(page):
+    """Click any 'show email' / 'view email' buttons on the MIC contact page."""
+    selectors = [
+        "text=/Show email/i",
+        "text=/View email/i",
+        "text=/Click to view/i",
+        "[class*='email'] [class*='show']",
+        "[class*='email'] [class*='view']",
+        "button:has-text('email')",
+    ]
+    for sel in selectors:
+        try:
+            el = await page.query_selector(sel)
+            if el:
+                await el.click(timeout=2000)
+                await asyncio.sleep(1.5)
+                return
+        except Exception:
+            continue
 
 
 def _parse_contact_text(text: str) -> MICContact:
@@ -148,12 +173,19 @@ def _parse_contact_text(text: str) -> MICContact:
     if email_match:
         contact.email = email_match.group(1).strip()
 
-    # Contact person — "Mr./Miss/Ms. Name" pattern
-    name_match = re.search(r"((?:Mr\.?|Mrs\.?|Ms\.?|Miss)\s+[A-Za-z]+(?:\s+[A-Za-z]+)?)", text)
+    # Contact person — "Mr./Miss/Ms. FirstName [MiddleName] [LastName]"
+    # Allow up to 3 words (handles "Miss Shirley Wang Chen")
+    name_match = re.search(
+        r"((?:Mr\.?|Mrs\.?|Ms\.?|Miss)\s+[A-Z][a-z]+(?:\s+[A-Z][a-z]+){0,2})",
+        text,
+    )
     if name_match:
         name = name_match.group(1).strip()
         # Remove junk words that sometimes appear after the name
-        name = re.sub(r"\s+(?:Chat|Sales|Export|Send|Now|Inquiry).*", "", name, flags=re.IGNORECASE)
+        name = re.sub(
+            r"\s+(?:Chat|Sales|Export|Send|Now|Inquiry|Overseas|Marketing|Manager|Director).*$",
+            "", name, flags=re.IGNORECASE,
+        )
         contact.contact_name = name.strip()
 
     # Contact title

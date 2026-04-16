@@ -28,21 +28,45 @@ EU_COUNTRIES = ["DE", "FR", "GB", "NL", "IT", "ES", "AT", "BE", "PL", "PT"]
 
 # Product categories where Chinese brands dominate EU advertising
 SEARCH_KEYWORDS = [
-    "LED", "phone case", "smart watch", "drone", "power bank",
+    # Electronics
+    "LED light", "phone case", "smart watch", "drone", "power bank",
     "security camera", "robot vacuum", "3D printer", "wireless earbuds",
     "action camera", "ring light", "car accessories", "solar panel",
     "electric scooter", "massage gun", "air purifier", "projector",
-    "bluetooth speaker", "dash cam", "smart home",
+    "bluetooth speaker", "dash cam", "smart home", "mini fan",
+    "portable charger", "wireless charger", "car charger",
+    # Beauty / health
+    "facial massager", "hair remover", "teeth whitening", "skincare device",
+    "fitness tracker", "smart scale", "posture corrector",
+    # Home
+    "LED strip", "smart bulb", "silicone mat", "storage box",
+    "pet camera", "automatic feeder", "tabletop fountain",
+    # Fashion / accessories
+    "wristwatch", "ring", "necklace", "wallet", "backpack",
+    # Tools
+    "laser engraver", "soldering iron", "diy kit", "multitool",
 ]
 
 # Chinese character range for detecting Chinese brand names
 CHINESE_RE = re.compile(r"[\u4e00-\u9fff]")
 
-# Common pinyin patterns in Chinese brand names
-PINYIN_BRAND_PATTERNS = [
-    r"\b[A-Z][a-z]*[A-Z][a-z]+\b",  # CamelCase like XiaoMi, HuaWei
-    r"\b(?:Xiao|Hua|Da|Zhong|Tian|Jin|Chang|Guang|Shen|Dong)[a-z]+\b",
-]
+# Common pinyin syllables that strongly suggest a Chinese brand
+PINYIN_SYLLABLES = {
+    "xiao", "hua", "da", "zhong", "tian", "jin", "chang", "guang",
+    "shen", "dong", "ai", "bei", "fei", "gao", "hui", "lian", "mei",
+    "xin", "ying", "zhi", "long", "ming", "xing", "yu", "cheng",
+    "wei", "jian", "kang", "feng", "hong", "peng", "qing", "sheng",
+    "tao", "yong", "zhan", "zi", "kai", "yu", "li", "xi",
+}
+
+# Known Western brand names to exclude
+WESTERN_BRANDS = {
+    "APPLE", "GOOGLE", "AMAZON", "SAMSUNG", "SONY", "BOSE", "DYSON",
+    "TESLA", "NOKIA", "BOSCH", "SIEMENS", "PHILIPS", "LG", "HP",
+    "DELL", "INTEL", "NIKE", "ADIDAS", "PUMA", "UNDER ARMOUR",
+    "ZARA", "H&M", "UNIQLO", "IKEA", "NESTLE", "COCACOLA",
+    "PEPSI", "MICROSOFT", "YAMAHA", "PANASONIC",
+}
 
 # Facebook Ad Library search URL (public, no auth needed)
 AD_LIBRARY_URL = "https://www.facebook.com/ads/library/"
@@ -235,13 +259,21 @@ def _looks_chinese_brand(name: str, website: str = "") -> bool:
     """
     Heuristic: does this advertiser name look like a Chinese brand?
 
-    Signals:
+    Signals (any ONE triggers positive):
     - Contains Chinese characters
-    - Looks like pinyin (specific patterns)
     - Website is .cn or Chinese hosting
-    - Name is a seemingly random string of letters (common for CN brands)
+    - Contains known Chinese city name (Shenzhen, Guangzhou, etc.)
+    - Name contains pinyin syllables
+    - Short all-caps single-word brand name (not a known Western brand)
     """
-    # Chinese characters in name
+    if not name or len(name) < 3:
+        return False
+
+    # Hard exclude: known Western brands
+    if name.upper().strip() in WESTERN_BRANDS:
+        return False
+
+    # Chinese characters in name — strongest signal
     if CHINESE_RE.search(name):
         return True
 
@@ -249,18 +281,32 @@ def _looks_chinese_brand(name: str, website: str = "") -> bool:
     if website and (".cn" in website or ".com.cn" in website):
         return True
 
-    # Pinyin-style brand names
-    for pattern in PINYIN_BRAND_PATTERNS:
-        if re.search(pattern, name):
-            return True
+    name_lower = name.lower()
 
-    # Short all-caps brand names that look like Chinese electronics brands
-    # Only match if the name is a single word (e.g. UGREEN, BASEUS, TOZO)
-    if re.match(r"^[A-Z]{4,10}$", name) and " " not in name:
-        # Exclude well-known Western brands
-        western = {"APPLE", "GOOGLE", "AMAZON", "SAMSUNG", "SONY", "BOSE", "DYSON", "TESLA", "NOKIA", "BOSCH"}
-        if name not in western:
-            return True
+    # Chinese city/province in name (e.g. "Shenzhen XYZ Co.")
+    chinese_locations = [
+        "shenzhen", "guangzhou", "shanghai", "beijing", "yiwu",
+        "hangzhou", "dongguan", "xiamen", "ningbo", "qingdao",
+        "foshan", "zhongshan", "guangdong", "zhejiang", "fujian",
+    ]
+    if any(loc in name_lower for loc in chinese_locations):
+        return True
+
+    # Chinese company suffixes
+    cn_suffixes = ["co., ltd", "co.,ltd", "technology co", "trading co",
+                   "electronic co", "industries limited"]
+    if any(suf in name_lower for suf in cn_suffixes):
+        return True
+
+    # Pinyin syllable detection (requires at least 2 to reduce false positives)
+    name_tokens = re.findall(r"[a-z]+", name_lower)
+    pinyin_hits = sum(1 for t in name_tokens if t in PINYIN_SYLLABLES)
+    if pinyin_hits >= 2:
+        return True
+
+    # Single-word all-caps brand (UGREEN, BASEUS, TOZO pattern)
+    if re.match(r"^[A-Z]{4,10}$", name.strip()) and " " not in name:
+        return True
 
     return False
 

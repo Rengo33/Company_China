@@ -86,6 +86,20 @@ async def setup_alibaba_session():
         return False
 
 
+async def _prewarm_session(page):
+    """Visit homepage + random category before search, simulating real user."""
+    try:
+        await page.goto("https://www.alibaba.com", wait_until="domcontentloaded", timeout=20000)
+        await asyncio.sleep(random.uniform(3, 6))
+        # Simulate scroll
+        await page.evaluate("window.scrollTo(0, 300)")
+        await asyncio.sleep(random.uniform(1, 3))
+        await page.evaluate("window.scrollTo(0, 800)")
+        await asyncio.sleep(random.uniform(2, 4))
+    except Exception:
+        pass
+
+
 async def scrape_alibaba_suppliers(
     category: str = "electronics",
     limit: int = 50,
@@ -93,8 +107,17 @@ async def scrape_alibaba_suppliers(
     """
     Scrape Alibaba supplier directory using saved session.
     Runs with visible browser (headless gets blocked).
+    Uses playwright-stealth to reduce CAPTCHA frequency.
     """
     from playwright.async_api import async_playwright
+
+    # Try playwright-stealth (optional — falls back if not installed)
+    try:
+        from playwright_stealth import Stealth
+        stealth = Stealth()
+        use_stealth = True
+    except ImportError:
+        use_stealth = False
 
     results = []
     cat_slug = CATEGORIES.get(category, category)
@@ -104,12 +127,25 @@ async def scrape_alibaba_suppliers(
         context = await p.chromium.launch_persistent_context(
             user_data_dir=SESSION_DIR,
             headless=False,
-            args=["--disable-blink-features=AutomationControlled"],
+            args=[
+                "--disable-blink-features=AutomationControlled",
+                "--disable-features=IsolateOrigins,site-per-process",
+                "--no-sandbox",
+            ],
+            viewport={"width": 1440, "height": 900},
+            user_agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
         )
+
+        if use_stealth:
+            await stealth.apply_stealth_async(context)
 
         try:
             page = context.pages[0] if context.pages else await context.new_page()
             page_num = 1
+
+            # Pre-warm session: visit homepage first so search looks natural
+            console.print("[dim]Pre-warming session...[/dim]")
+            await _prewarm_session(page)
 
             with Progress() as progress:
                 task = progress.add_task(f"Scraping Alibaba ({cat_slug})...", total=limit)
@@ -121,7 +157,13 @@ async def scrape_alibaba_suppliers(
                     )
 
                     await page.goto(url, wait_until="domcontentloaded", timeout=30000)
-                    await asyncio.sleep(random.uniform(3, 6))
+                    await asyncio.sleep(random.uniform(5, 10))
+
+                    # Simulate human scrolling
+                    await page.evaluate("window.scrollTo(0, 400)")
+                    await asyncio.sleep(random.uniform(1, 2))
+                    await page.evaluate("window.scrollTo(0, 900)")
+                    await asyncio.sleep(random.uniform(1, 3))
 
                     # Check for CAPTCHA and wait for user to solve it
                     content = await page.content()
